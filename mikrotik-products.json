@@ -1,0 +1,534 @@
+[
+  {
+    "id": "ccr2004-1g-12s-2xs",
+    "name": "MikroTik® CCR2004-1G-12S+2XS",
+    "code": "CCR2004-1G-12S+2XS",
+    "category": "Routing",
+    "specs": [
+      "12× 10G SFP+ ports",
+      "2× 25G SFP28 ports",
+      "1× Gigabit Ethernet",
+      "4GB RAM",
+      "128MB NAND storage",
+      "AL32400 CPU @ 2GHz",
+      "Passive cooling"
+    ],
+    "description": "Enterprise-grade Cloud Core Router with twelve 10G SFP+ ports, two 25G SFP28 ports, and powerful AL32400 CPU for exceptional routing performance.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CCR2004-1G-12S_2XS_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "youtubeUrl": "https://www.youtube.com/watch?v=JaNzHM7M0T4",
+    "relatedProducts": ["ccr2116-12g-4s", "crs326-24s-2q-rm", "crs354-48g-4s-2q"]
+  },
+  {
+    "id": "ccr2116-12g-4s",
+    "name": "MikroTik® CCR2116-12G-4S+",
+    "code": "CCR2116-12G-4S+",
+    "category": "Routing",
+    "specs": [
+      "12× Gigabit Ethernet",
+      "4× 10G SFP+ ports",
+      "16GB RAM",
+      "AL52400 CPU @ 2GHz",
+      "128MB NAND storage",
+      "Dual redundant PSU",
+      "1U rackmount"
+    ],
+    "description": "Powerful 16-core Cloud Core Router designed for ISPs and enterprises. Features dual PSU and exceptional routing throughput.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CCR2116-12G-4S_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "youtubeUrl": "https://www.youtube.com/watch?v=_hNXD6FXvFA",
+    "relatedProducts": ["ccr2004-1g-12s-2xs", "crs326-24s-2q-rm"]
+  },
+  {
+    "id": "crs326-24s-2q-rm",
+    "name": "MikroTik® CRS326-24S+2Q+RM",
+    "code": "CRS326-24S+2Q+RM",
+    "category": "Switching",
+    "specs": [
+      "24× 10G SFP+ ports",
+      "2× 40G QSFP+ ports",
+      "64GB RAM capability",
+      "800MHz CPU",
+      "1.6Tbps switching capacity",
+      "1U rackmount",
+      "Layer 3 hardware offloading"
+    ],
+    "description": "Professional 10G aggregation switch with dual 40G uplinks. Perfect for data centers and high-density deployments.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS326-24S_2Q_RM_800.png",
+    "status": "In Stock",
+    "youtubeUrl": "https://www.youtube.com/watch?v=jT8D0MZmYZE",
+    "relatedProducts": ["crs354-48g-4s-2q", "ccr2004-1g-12s-2xs"]
+  },
+  {
+    "id": "crs354-48g-4s-2q",
+    "name": "MikroTik® CRS354-48G-4S+2Q+RM",
+    "code": "CRS354-48G-4S+2Q+RM",
+    "category": "Switching",
+    "specs": [
+      "48× Gigabit Ethernet",
+      "4× 10G SFP+ ports",
+      "2× 40G QSFP+ ports",
+      "1GB RAM",
+      "ARM v7 CPU @ 800MHz",
+      "Layer 3 routing",
+      "1U rackmount"
+    ],
+    "description": "High-density Gigabit switch with 10G and 40G uplinks. Ideal for enterprise campus networks and aggregation layers.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS354-48G-4S_2Q_RM_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["crs326-24s-2q-rm", "ccr2116-12g-4s"]
+  },
+  {
+    "id": "crs310-8g-2s",
+    "name": "MikroTik® CRS310-8G+2S+IN",
+    "code": "CRS310-8G+2S+IN",
+    "category": "Switching",
+    "specs": [
+      "8× 2.5G Ethernet",
+      "2× 10G SFP+ ports",
+      "512MB RAM",
+      "98Gbps switching capacity",
+      "Layer 3 hardware offloading",
+      "Desktop form factor"
+    ],
+    "description": "Compact multi-gigabit switch perfect for office deployments requiring 2.5G connectivity with 10G uplinks.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS310-8G_2S_IN_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "crs305-1g-4s",
+    "name": "MikroTik® CRS305-1G-4S+IN",
+    "code": "CRS305-1G-4S+IN",
+    "category": "Switching",
+    "specs": [
+      "4× 10G SFP+ ports",
+      "1× Gigabit Ethernet (management)",
+      "512MB RAM",
+      "88Gbps switching capacity",
+      "SwOS & RouterOS",
+      "Desktop enclosure"
+    ],
+    "description": "Affordable 10G switch for home labs and small deployments. Dual-boot SwOS and RouterOS operating systems.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS305-1G-4S_IN_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["crs310-8g-2s", "crs326-24s-2q-rm"]
+  },
+  {
+    "id": "hap-ax3",
+    "name": "MikroTik® hAP ax³",
+    "code": "C53UiG+5HPaxD2HPaxD",
+    "category": "Wireless",
+    "specs": [
+      "WiFi 6 (802.11ax)",
+      "Dual-band 2.4GHz + 5GHz",
+      "4× Gigabit Ethernet",
+      "1× 2.5G Ethernet",
+      "1GB RAM",
+      "IPQ-6010 CPU @ 800MHz",
+      "PoE-in support"
+    ],
+    "description": "Next-generation WiFi 6 access point with dual-radio and multi-gigabit connectivity for modern home and office networks.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/C53UiG_5HPaxD2HPaxD_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "youtubeUrl": "https://www.youtube.com/watch?v=lA6JLaXLxBQ",
+    "relatedProducts": ["hap-ac3", "cap-ax"]
+  },
+  {
+    "id": "hap-ac3",
+    "name": "MikroTik® hAP ac³",
+    "code": "RBD53iG-5HacD2HnD",
+    "category": "Wireless",
+    "specs": [
+      "WiFi 5 (802.11ac)",
+      "Dual-band 2.4GHz + 5GHz",
+      "5× Gigabit Ethernet",
+      "256MB RAM",
+      "IPQ-4019 CPU @ 716MHz",
+      "USB port"
+    ],
+    "description": "Popular dual-band WiFi 5 router with robust hardware and excellent coverage for home and small office use.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RBD53iG-5HacD2HnD_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["hap-ax3", "hap-ac2"]
+  },
+  {
+    "id": "cap-ax",
+    "name": "MikroTik® cAP ax",
+    "code": "cAP ax",
+    "category": "Wireless",
+    "specs": [
+      "WiFi 6 (802.11ax)",
+      "Dual-band concurrent",
+      "2× Gigabit Ethernet",
+      "PoE-in (802.3af/at)",
+      "Ceiling mount design",
+      "CAPsMAN v2 support"
+    ],
+    "description": "Professional WiFi 6 ceiling access point for enterprise deployments with centralized management capabilities.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/cAP_ax_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["hap-ax3", "cap-ac"]
+  },
+  {
+    "id": "wap-ac",
+    "name": "MikroTik® wAP ac",
+    "code": "RBwAPG-5HacD2HnD",
+    "category": "Wireless",
+    "specs": [
+      "WiFi 5 dual-band",
+      "2× Gigabit Ethernet",
+      "Weatherproof enclosure",
+      "PoE-in support",
+      "-40°C to +70°C",
+      "Outdoor rated"
+    ],
+    "description": "Weatherproof dual-band access point designed for outdoor deployments in harsh environments.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RBwAPG-5HacD2HnD_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "chateau-5g",
+    "name": "MikroTik® Chateau 5G",
+    "code": "Chateau 5G",
+    "category": "5G/LTE",
+    "specs": [
+      "5G NR modem (sub-6 GHz)",
+      "4× Gigabit Ethernet",
+      "WiFi 5 dual-band",
+      "1GB RAM",
+      "Quad-core 1.4GHz CPU",
+      "Dual SIM slots",
+      "GPS support"
+    ],
+    "description": "Advanced 5G home router with high-speed cellular connectivity and full RouterOS capabilities.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/Chateau_5G_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "youtubeUrl": "https://www.youtube.com/watch?v=kZNLhQvkJHI",
+    "relatedProducts": ["chateau-lte12", "sxt-lte6"]
+  },
+  {
+    "id": "chateau-lte12",
+    "name": "MikroTik® Chateau LTE12",
+    "code": "Chateau LTE12",
+    "category": "5G/LTE",
+    "specs": [
+      "LTE Cat12 modem",
+      "Up to 600Mbps download",
+      "4× Gigabit Ethernet",
+      "WiFi 5 dual-band",
+      "Dual SIM with failover",
+      "1GB RAM"
+    ],
+    "description": "High-performance LTE Cat12 router for reliable backup connectivity and primary internet in remote locations.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/Chateau_LTE12_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["chateau-5g", "lhg-lte6"]
+  },
+  {
+    "id": "sxt-lte6",
+    "name": "MikroTik® SXT LTE6 kit",
+    "code": "SXT LTE6 kit",
+    "category": "5G/LTE",
+    "specs": [
+      "LTE Cat6 modem",
+      "Integrated dual-chain LTE antenna",
+      "1× Gigabit Ethernet",
+      "PoE-in",
+      "Outdoor weatherproof",
+      "SIM slot"
+    ],
+    "description": "Outdoor LTE CPE with integrated high-gain antenna for long-range cellular connectivity.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/SXT_LTE6_kit_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["chateau-lte12", "lhg-lte6"]
+  },
+  {
+    "id": "lhg-lte6",
+    "name": "MikroTik® LHG LTE6 kit",
+    "code": "LHG LTE6 kit",
+    "category": "5G/LTE",
+    "specs": [
+      "LTE Cat6 modem",
+      "Integrated 17dBi directional antenna",
+      "1× Gigabit Ethernet",
+      "PoE-in",
+      "Weatherproof IP67"
+    ],
+    "description": "Long-range LTE CPE with high-gain directional antenna for maximizing cellular signal in remote areas.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/LHG_LTE6_kit_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "knot",
+    "name": "MikroTik® KNOT",
+    "code": "KNOT",
+    "category": "IoT",
+    "specs": [
+      "LoRa® gateway",
+      "2.4GHz WiFi",
+      "1× Ethernet port",
+      "Outdoor enclosure",
+      "PoE-in",
+      "GPS"
+    ],
+    "description": "LoRaWAN® gateway for IoT deployments, enabling long-range low-power sensor networks.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/KNOT_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["knot-lr8", "knot-lr9"]
+  },
+  {
+    "id": "gper",
+    "name": "MikroTik® GPER",
+    "code": "GPER",
+    "category": "Accessories",
+    "specs": [
+      "Gigabit Ethernet repeater",
+      "Extends PoE up to 100m",
+      "No configuration needed",
+      "Plug and play",
+      "Compact design",
+      "PoE-in and PoE-out"
+    ],
+    "description": "Simple Gigabit Ethernet repeater that extends PoE power and data signal for another 100 meters.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/GPER_800.png",
+    "status": "In Stock",
+    "youtubeUrl": "https://www.youtube.com/watch?v=8rHvnZJW8xU"
+  },
+  {
+    "id": "gperhpx6",
+    "name": "MikroTik® GPER-HPX6",
+    "code": "GPER-HPX6",
+    "category": "Accessories",
+    "specs": [
+      "6-pack of GPER units",
+      "Gigabit Ethernet repeater",
+      "Extends PoE up to 100m each",
+      "Plug and play",
+      "No configuration",
+      "Bulk packaging"
+    ],
+    "description": "Six-pack of Gigabit Ethernet repeaters for extending PoE in large deployments. Cost-effective bulk option.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/GPER_800.png",
+    "status": "In Stock",
+    "youtubeUrl": "https://www.youtube.com/watch?v=8rHvnZJW8xU"
+  },
+  {
+    "id": "rps-dc",
+    "name": "MikroTik® RPS-DC",
+    "code": "RPS-DC",
+    "category": "Accessories",
+    "specs": [
+      "Redundant power supply",
+      "DC 12-57V input",
+      "Multiple device support",
+      "Automatic failover",
+      "LED indicators"
+    ],
+    "description": "Redundant power supply system for critical MikroTik devices ensuring continuous uptime.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RPS-DC_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "sfp-10g-lr",
+    "name": "MikroTik® S+31DLC10D",
+    "code": "S+31DLC10D",
+    "category": "Accessories",
+    "specs": [
+      "10G SFP+ module",
+      "LC connector",
+      "Single-mode fiber",
+      "Up to 10km distance",
+      "1310nm wavelength",
+      "DDM support"
+    ],
+    "description": "10 Gigabit SFP+ fiber optic module for long-range connections up to 10 kilometers.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/S_31DLC10D_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["sfp-10g-sr", "qsfp-40g-sr4"]
+  },
+  {
+    "id": "sfp-10g-sr",
+    "name": "MikroTik® S+85DLC03D",
+    "code": "S+85DLC03D",
+    "category": "Accessories",
+    "specs": [
+      "10G SFP+ module",
+      "LC connector",
+      "Multi-mode fiber",
+      "Up to 300m distance",
+      "850nm wavelength",
+      "DDM support"
+    ],
+    "description": "10 Gigabit SFP+ fiber optic module for short-range high-speed connections.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/S_85DLC03D_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["sfp-10g-lr", "crs305-1g-4s"]
+  },
+  {
+    "id": "qsfp-40g-sr4",
+    "name": "MikroTik® Q+85MP04D",
+    "code": "Q+85MP04D",
+    "category": "Accessories",
+    "specs": [
+      "40G QSFP+ module",
+      "MPO/MTP connector",
+      "Multi-mode fiber",
+      "Up to 100m distance",
+      "850nm wavelength",
+      "DDM support"
+    ],
+    "description": "40 Gigabit QSFP+ fiber module for high-bandwidth aggregation and data center links.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/Q_85MP04D_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["crs326-24s-2q-rm", "crs354-48g-4s-2q"]
+  },
+  {
+    "id": "poe-injector",
+    "name": "MikroTik® RBGPOE",
+    "code": "RBGPOE",
+    "category": "Accessories",
+    "specs": [
+      "Gigabit PoE injector",
+      "48V 0.5A output",
+      "802.3af/at compatible",
+      "24W max power",
+      "Compact design"
+    ],
+    "description": "Gigabit PoE injector for powering MikroTik devices without built-in PoE capability.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RBGPOE_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "hex-s",
+    "name": "MikroTik® hEX S",
+    "code": "RB760iGS",
+    "category": "Routing",
+    "specs": [
+      "5× Gigabit Ethernet",
+      "1× SFP port",
+      "256MB RAM",
+      "Dual-core 880MHz CPU",
+      "USB port",
+      "PoE-out on port 5",
+      "Desktop enclosure"
+    ],
+    "description": "Versatile Gigabit router with SFP and USB ports, perfect for advanced home and small office networks.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RB760iGS_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "relatedProducts": ["hex", "hap-ac3"]
+  },
+  {
+    "id": "rb5009",
+    "name": "MikroTik® RB5009UG+S+IN",
+    "code": "RB5009UG+S+IN",
+    "category": "Routing",
+    "specs": [
+      "7× 2.5G Ethernet",
+      "1× 10G SFP+ port",
+      "1× Gigabit Ethernet (PoE-in)",
+      "1GB RAM",
+      "Quad-core 1.4GHz CPU",
+      "USB 3.0",
+      "Desktop/rackmount"
+    ],
+    "description": "Multi-gigabit router with 10G uplink, ideal for fiber internet and high-throughput applications.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RB5009UG_S_IN_800.png",
+    "status": "In Stock",
+    "featured": true,
+    "youtubeUrl": "https://www.youtube.com/watch?v=zDN3czT8GfA",
+    "relatedProducts": ["hex-s", "crs310-8g-2s"]
+  },
+  {
+    "id": "crs328-24p-4s",
+    "name": "MikroTik® CRS328-24P-4S+RM",
+    "code": "CRS328-24P-4S+RM",
+    "category": "Switching",
+    "specs": [
+      "24× Gigabit PoE-out ports",
+      "4× 10G SFP+ uplinks",
+      "450W PoE budget",
+      "1GB RAM",
+      "800MHz CPU",
+      "Layer 3 routing",
+      "1U rackmount"
+    ],
+    "description": "High-power PoE switch with 450W budget and 10G uplinks for powering access points and IP cameras.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS328-24P-4S_RM_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["crs326-24s-2q-rm", "cap-ax"]
+  },
+  {
+    "id": "crs317-1g-16s",
+    "name": "MikroTik® CRS317-1G-16S+RM",
+    "code": "CRS317-1G-16S+RM",
+    "category": "Switching",
+    "specs": [
+      "16× 10G SFP+ ports",
+      "1× Gigabit management port",
+      "800MHz CPU",
+      "1GB RAM",
+      "Dual PSU support",
+      "1U rackmount"
+    ],
+    "description": "Cost-effective 16-port 10G switch for building high-speed network backbones.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/CRS317-1G-16S_RM_800.png",
+    "status": "In Stock",
+    "relatedProducts": ["crs326-24s-2q-rm", "sfp-10g-lr"]
+  },
+  {
+    "id": "netmetal-ac2",
+    "name": "MikroTik® NetMetal ac²",
+    "code": "RBNetMetalac2",
+    "category": "Wireless",
+    "specs": [
+      "WiFi 5 (802.11ac)",
+      "Dual-band concurrent",
+      "5× Gigabit Ethernet",
+      "Weatherproof outdoor",
+      "PoE-in",
+      "Integrated dual-polarity antenna"
+    ],
+    "description": "Outdoor dual-band wireless router with integrated antenna, perfect for point-to-multipoint deployments.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/RBNetMetalac2_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "lhg-5hpnd-xl",
+    "name": "MikroTik® LHG 5HPnD-XL",
+    "code": "LHG 5HPnD-XL",
+    "category": "Wireless",
+    "specs": [
+      "5GHz 802.11n",
+      "27dBi integrated antenna",
+      "1× Gigabit Ethernet",
+      "PoE-in",
+      "Long-range point-to-point",
+      "Weatherproof"
+    ],
+    "description": "Extra-long-range 5GHz wireless link with 27dBi antenna for point-to-point connections up to 30km.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/LHG_5HPnD-XL_800.png",
+    "status": "In Stock"
+  },
+  {
+    "id": "groove-52hpn",
+    "name": "MikroTik® Groove 52HPn",
+    "code": "Groove 52HPn",
+    "category": "Wireless",
+    "specs": [
+      "Dual-band 2.4/5GHz",
+      "1× Ethernet port",
+      "PoE-in",
+      "N-male connector",
+      "External antenna support",
+      "Outdoor rated"
+    ],
+    "description": "Compact outdoor wireless device designed to be mounted directly on antenna, ideal for custom deployments.",
+    "imageUrl": "https://i.mt.lv/cdn/product_files/Groove_52HPn_800.png",
+    "status": "In Stock"
+  }
+]

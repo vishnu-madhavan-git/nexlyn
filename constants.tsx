@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Product, Category, HeroSlide } from './types';
+import mikrotikProducts from './mikrotik-products.json';
 
 export const COLORS = {
   primary: '#E60026',
@@ -9,7 +10,7 @@ export const COLORS = {
 };
 
 // Abstract Hardware Visuals (SVG Data URLs)
-const VISUALS = {
+export const VISUALS = {
   ROUTING: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9InVybCgjZ3JhZDEpIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkMSIgeDE9IjAiIHkxPSIwIiB4Mj0iODAwIiB5Mj0iODAwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iIzE0MDAwNSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAzMDMwMyIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxwYXRoIGQ9Ik0xMDAgMzAwSDcwME0xMDAgNTAwSDcwME0zMDAgMTAwVjcwME01MDAgMTAwVjcwMCIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMiIvPjxyZWN0IHg9IjIwMCIgeT0iMzUwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjEwMCIgcng9IjQiIGZpbGw9IiNFMzAwMjYiIGZpbGwtb3BhY2l0eT0iMC4wNSIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIyNDAiIGN5PSI0MDAiIHI9IjUiIGZpbGw9IiNFMzAwMjYiLz48Y2lyY2xlIGN4PSIyNzAiIGN5PSI0MDAiIHI9IjUiIGZpbGw9IiNFMzAwMjYiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSI0MDAiIHI9IjUiIGZpbGw9IiNFMzAwMjYiLz48L3N2Zz4=',
   SWITCHING: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9InVybCgjZ3JhZDIpIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkMiIgeDE9IjgwMCIgeTE9IjgwMCIgeDI9IjAiIHkyPSIwIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agc3RvcC1jb2xvcj0iI0U2MDAyNiIgc3RvcC1vcGFjaXR5PSIwLjE1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDMwMzAzIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMTUwIiB5PSIyMDAiIHdpZHRoPSI1MDAiIGhlaWdodD0iNDAwIiByeD0iOCIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjAiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz48cGF0aCBkPSJNMTgwIDI0MEg2MjBNMTgwIDI4MEg2MjBNMTgwIDMyMEg2MjBNMTgwIDM2MEg2MjAiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2Utb3BhY2l0eT0iMC4xIi8+PC9zdmc+',
   WIRELESS: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwMCIgaGVpZ2h0PSI4MDAiIGZpbGw9IiMwMzAzMDMiLz48Y2lyY2xlIGN4PSI0MDAiIGN5PSI0MDAiIHI9IjMwMCIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjEiLz48Y2lyY2xlIGN4PSI0MDAiIGN5PSI0MDAiIHI9IjIwMCIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjIiLz48Y2lyY2xlIGN4PSI0MDAiIGN5PSI0MDAiIHI9IjEwMCIgc3Ryb2tlPSIjRTYwMDI2IiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1vcGFjaXR5PSIwLjQiLz48Y2lyY2xlIGN4PSI0MDAiIGN5PSI0MDAiIHI9IjEwIiBmaWxsPSIjRTYwMDI2Ii8+PC9zdmc+',
@@ -34,136 +35,8 @@ export const ICONS = {
   Wifi: (props: React.SVGProps<SVGSVGElement>) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><circle cx="12" cy="20" r="1"/></svg>,
 };
 
-export const PRODUCTS: Product[] = [
-  // ROUTERS
-  {
-    id: 'ccr2004-12s',
-    name: 'MikroTik® CCR2004-1G-12S+2XS',
-    code: 'Cloud Core Router',
-    category: 'Routing',
-    specs: ['12× 10G SFP+', '2× 25G SFP28', 'RouterOS v7', 'AL52400 quad-core @ 2 GHz', 'BGP/OSPF/MPLS'],
-    description: 'The definitive solution for ISP backbones and enterprise core routing. Features phenomenal single-core performance.',
-    imageUrl: VISUALS.ROUTING,
-    status: 'In Stock',
-    featured: true
-  },
-  {
-    id: 'hap-ax3',
-    name: 'MikroTik® hAP ax³',
-    code: 'Home Access Point',
-    category: 'Wireless',
-    specs: ['Wi-Fi 6 (802.11ax)', '2.5 Gigabit Ethernet', 'Triple-chain 5 GHz', 'PoE-in/out', 'IPsec acceleration'],
-    description: 'Our top-of-the-line home/small office access point. Blazing fast wireless with the most advanced security features.',
-    imageUrl: VISUALS.WIRELESS,
-    status: 'In Stock',
-    featured: true
-  },
-  {
-    id: 'rb5009',
-    name: 'MikroTik® RB5009UG+S+IN',
-    code: 'RouterBOARD',
-    category: 'Routing',
-    specs: ['7× Gigabit Ethernet', '1× 2.5G Ethernet', '1× 10G SFP+', 'ARM quad-core @ 1.4 GHz', '1GB RAM'],
-    description: 'The ultimate heavy-duty home lab router. Seven times faster than the previous generation with versatile power options.',
-    imageUrl: VISUALS.ROUTING,
-    status: 'In Stock'
-  },
-  // SWITCHES
-  {
-    id: 'crs518',
-    name: 'MikroTik® CRS518-16XS-2XQ-RM',
-    code: 'Cloud Router Switch',
-    category: 'Switching',
-    specs: ['16× 10G SFP+', '2× 100G QSFP28', 'Hot-swap PSU', 'Quad-core 2 GHz', 'SwOS/RouterOS'],
-    description: 'High-density fiber switching for data centers and enterprise backbones. 100G capacity on every core port.',
-    imageUrl: VISUALS.SWITCHING,
-    status: 'In Stock',
-    featured: true
-  },
-  {
-    id: 'crs326',
-    name: 'MikroTik® CRS326-24G-2S+RM',
-    code: 'Cloud Router Switch',
-    category: 'Switching',
-    specs: ['24× Gigabit Ethernet', '2× 10G SFP+ uplinks', 'Rackmount 1U', 'PoE available', 'L3 routing'],
-    description: 'Reliable access layer switching with wire-speed performance and RouterOS L3 capabilities.',
-    imageUrl: VISUALS.SWITCHING,
-    status: 'In Stock'
-  },
-  {
-    id: 'css610',
-    name: 'MikroTik® CSS610-8G-2S+IN',
-    code: 'Cloud Smart Switch',
-    category: 'Switching',
-    specs: ['8× Gigabit Ethernet', '2× 10G SFP+', 'SwOS', 'Low power', 'Fanless'],
-    description: 'Compact 10G aggregation for small businesses. Silent, efficient, and professional.',
-    imageUrl: VISUALS.SWITCHING,
-    status: 'In Stock'
-  },
-  // WIRELESS
-  {
-    id: 'audience-ax',
-    name: 'MikroTik® Audience Wi-Fi 6',
-    code: 'Access Point',
-    category: 'Wireless',
-    specs: ['Wi-Fi 6', 'Tri-radio Mesh', '4×4 MIMO on 5 GHz', '2.5G uplink', 'PoE 802.3at'],
-    description: 'Stylish tri-band mesh solution for high-density environments like hotels, conferences, and modern offices.',
-    imageUrl: VISUALS.WIRELESS,
-    status: 'In Stock'
-  },
-  {
-    id: 'wap-ax',
-    name: 'MikroTik® wAP ax',
-    code: 'Wireless Access Point',
-    category: 'Wireless',
-    specs: ['Wi-Fi 6 dual-concurrent', 'Weatherproof IP54', 'PoE 802.3af/at', 'Integrated antennas'],
-    description: 'Rugged, weatherproof outdoor access point. Perfect for campus networks, warehouses, and mobile deployments.',
-    imageUrl: VISUALS.WIRELESS,
-    status: 'In Stock'
-  },
-  {
-    id: 'lhg-5-ac',
-    name: 'MikroTik® LHG 5 ac',
-    code: 'Light Head Grid',
-    category: 'Wireless',
-    specs: ['5 GHz 802.11ac', '24.5 dBi antenna', 'PtP up to 10 km', 'Weatherproof', 'RouterOS L3'],
-    description: 'The standard for point-to-point wireless links. Grid design offers unmatched wind protection for high-altitude installs.',
-    imageUrl: VISUALS.WIRELESS,
-    status: 'In Stock'
-  },
-  // 5G/LTE
-  {
-    id: 'chateau-5g-ax',
-    name: 'MikroTik® Chateau 5G ax',
-    code: '5G Router',
-    category: '5G/LTE',
-    specs: ['5G NR R16 modem', 'Wi-Fi 6 dual-band', '2.5 Gigabit Ethernet', 'eSIM + nano SIM'],
-    description: 'Carrier-grade 5G connectivity for home and enterprise. Features advanced carrier aggregation and high-gain antennas.',
-    imageUrl: VISUALS.LTE,
-    status: 'In Stock'
-  },
-  {
-    id: 'ltap-lte',
-    name: 'MikroTik® LtAP LTE kit',
-    code: 'LTE Access Point',
-    category: '5G/LTE',
-    specs: ['LTE Cat 4', 'Dual-SIM failover', 'Wi-Fi 2.4/5 GHz', 'GPS', 'Weatherproof IP67'],
-    description: 'Industrial-grade mobile gateway for vehicles and remote IoT deployments with GPS and triple SIM slots.',
-    imageUrl: VISUALS.LTE,
-    status: 'In Stock'
-  },
-  // ACCESSORIES
-  {
-    id: 's-rj10',
-    name: 'MikroTik® S+RJ10',
-    code: 'SFP+ Module',
-    category: 'Accessories',
-    specs: ['10GBASE-T copper SFP+', 'RJ45 Connector', '100m on Cat6a', 'Low power consumption'],
-    description: 'Transform your SFP+ ports into 10G copper ports. Supports 6 speeds for maximum hardware compatibility.',
-    imageUrl: VISUALS.ACCESSORIES,
-    status: 'In Stock'
-  }
-];
+// Import comprehensive MikroTik product database
+export const PRODUCTS: Product[] = mikrotikProducts as Product[];
 
 export const CATEGORIES: Category[] = [
   { name: 'All', id: 'all', count: 12, icon: 'Globe' },
@@ -208,4 +81,5 @@ export const HERO_SLIDES: HeroSlide[] = [
 ];
 
 export const WHATSAPP_NUMBER = '971502474482';
-export const ADMIN_PASSCODE = 'vidi-admin-2025';
+export const ADMIN_PASSCODE = '3210'; // Client access
+export const OWNER_PASSCODE = '4560'; // Owner full access

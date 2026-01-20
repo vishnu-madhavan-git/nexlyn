@@ -10,6 +10,8 @@ export interface Product {
   imageUrl: string;
   status: 'In Stock' | 'Low Stock' | 'Backorder';
   featured?: boolean;
+  youtubeUrl?: string;
+  relatedProducts?: string[]; // Array of product IDs
 }
 
 export interface GroundingSource {
