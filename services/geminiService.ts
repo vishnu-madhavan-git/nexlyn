@@ -74,7 +74,7 @@ export class GeminiService {
     try {
       const response = await this.ai.models.generateContent({
         model: MODELS.FAST_FLASH,
-        contents: prompt,
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
         config: {
           systemInstruction: `You are a content expert for NEXLYN Distributions. 
           Provide accurate, professional B2B content about MikroTik distribution in the Middle East and Africa.

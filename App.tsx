@@ -110,7 +110,7 @@ const App: React.FC = () => {
         const content = await gemini.fetchHomeContent();
         setHomeContent(content);
       } catch (err) {
-        console.error('Failed to fetch home content:', err);
+        console.error('Failed to fetch AI-generated home content, using fallback:', err);
       }
     };
     
@@ -1041,16 +1041,18 @@ const App: React.FC = () => {
                   <div className="h-1 w-24 bg-nexlyn rounded-full mx-auto" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {homeContent.features.map((feature, idx) => (
-                    <div key={idx} className="glass-panel p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-nexlyn/30 transition-all space-y-4">
-                      <div className="w-12 h-12 rounded-xl bg-nexlyn/10 flex items-center justify-center">
-                        {ICONS[feature.icon as keyof typeof ICONS] && 
-                          React.createElement(ICONS[feature.icon as keyof typeof ICONS], { className: "w-6 h-6 text-nexlyn" })}
+                  {homeContent.features.map((feature, idx) => {
+                    const IconComponent = ICONS[feature.icon as keyof typeof ICONS];
+                    return (
+                      <div key={idx} className="glass-panel p-8 rounded-2xl border border-black/5 dark:border-white/5 hover:border-nexlyn/30 transition-all space-y-4">
+                        <div className="w-12 h-12 rounded-xl bg-nexlyn/10 flex items-center justify-center">
+                          {IconComponent ? <IconComponent className="w-6 h-6 text-nexlyn" /> : null}
+                        </div>
+                        <h3 className="text-lg font-black uppercase text-slate-900 dark:text-white">{feature.title}</h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">{feature.description}</p>
                       </div>
-                      <h3 className="text-lg font-black uppercase text-slate-900 dark:text-white">{feature.title}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{feature.description}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
             )}
