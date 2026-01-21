@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, GenerateContentResponse, Type, Modality, LiveServerMessage } from "@google/genai";
-import { GroundingSource } from "../types";
+import { GroundingSource, HomeContent } from "../types";
 
 const MODELS = {
   CHAT_PRO: "gemini-2.0-flash-exp",
@@ -58,6 +58,105 @@ export class GeminiService {
       .map(c => ({ title: c.web?.title || "Source", uri: c.web?.uri || "" })) || [];
       
     return { text: response.text || "Connection stable, awaiting next transmission.", sources };
+  }
+
+  // Fetch Home Content with AI-generated data
+  async fetchHomeContent(): Promise<HomeContent> {
+    const prompt = `
+      Provide structured information about NEXLYN Distribution LLC:
+      1. Hero section with compelling title, subtitle, and description about being a MikroTik Master Distributor
+      2. Four main features/benefits of partnering with NEXLYN
+      
+      Format as JSON with this exact structure:
+      {
+        "hero": {
+          "title": "string",
+          "subtitle": "string",
+          "description": "string"
+        },
+        "features": [
+          {
+            "title": "string",
+            "description": "string",
+            "icon": "Shield or Router or Globe or Bolt"
+          }
+        ]
+      }
+    `;
+
+    try {
+      const response = await this.ai.models.generateContent({
+        model: MODELS.FAST_FLASH,
+        contents: prompt,
+        config: {
+          systemInstruction: `You are a content expert for NEXLYN Distributions. 
+          Provide accurate, professional B2B content about MikroTik distribution in the Middle East and Africa.
+          Return only valid JSON without markdown formatting or code blocks.`,
+        },
+      });
+
+      // Handle various response formats - try multiple parsing strategies
+      let jsonText = response.text.trim();
+      
+      // Remove markdown code blocks if present
+      jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+      
+      // Try to find JSON object in the response
+      const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        jsonText = jsonMatch[0];
+      }
+      
+      const parsed = JSON.parse(jsonText);
+      
+      // Validate the response structure
+      if (!this.isValidHomeContent(parsed)) {
+        console.warn('AI response does not match expected structure, using fallback');
+        return this.getFallbackContent();
+      }
+      
+      return parsed;
+    } catch (err) {
+      console.error("Failed to fetch home content from Gemini AI, returning fallback content.", err);
+      console.error('Failed to fetch home content from Gemini API, returning fallback content:', err);
+      return this.getFallbackContent();
+    }
+  }
+
+  // Validate HomeContent structure
+  private isValidHomeContent(data: any): data is HomeContent {
+    return (
+      data &&
+      typeof data === 'object' &&
+      data.hero &&
+      typeof data.hero.title === 'string' &&
+      typeof data.hero.subtitle === 'string' &&
+      typeof data.hero.description === 'string' &&
+      Array.isArray(data.features) &&
+      data.features.length > 0 &&
+      data.features.every((f: any) => 
+        typeof f.title === 'string' &&
+        typeof f.description === 'string' &&
+        typeof f.icon === 'string'
+      )
+    );
+  }
+
+  // Get fallback content
+  private getFallbackContent(): HomeContent {
+    return {
+      hero: {
+        title: "NEXLYN DISTRIBUTIONS",
+        subtitle: "Official MikroTik® Master Distributor",
+        description: "Serving Middle East & Africa with carrier-grade networking solutions"
+      },
+      features: [
+        { title: "Master Distributor", description: "Official MikroTik partnership", icon: "Shield" },
+        { title: "Carrier-Grade", description: "Enterprise networking hardware", icon: "Router" },
+        { title: "Regional Hub", description: "Dubai-based distribution center", icon: "Globe" },
+        { title: "Technical Support", description: "Expert deployment guidance", icon: "Shield" }
+      ]
+    };
   }
 }
 
