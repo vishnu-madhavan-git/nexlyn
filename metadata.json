@@ -1,9 +1,6 @@
 {
-  "name": "NEXLYN Distribution LLC",
-  "description": "Official MikroTik® Authorized Distributor - Enterprise networking solutions for Middle East & Africa. B2B distribution platform with AI-powered product consultation.",
-  "domain": "www.nextlyndistribution.com",
-  "company": "NEXLYN Distribution LLC",
-  "region": "Middle East & Africa (MENA)",
+  "name": "NEXLYN - v2",
+  "description": "High-end AI-powered distribution interface for Nexlyn LLC. MikroTik Master Distributor.",
   "requestFramePermissions": [
     "camera",
     "microphone",
