@@ -24,51 +24,77 @@ If a user asks about pricing, direct them to use the "B2B Quote" or WhatsApp but
 
 export class GeminiService {
   private getAI() {
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
+    if (!apiKey) {
+      throw new Error('Gemini API key is not configured. Please set GEMINI_API_KEY in your .env.local file.');
+    }
+    return new GoogleGenAI({ apiKey });
   }
 
   async *streamTech(prompt: string) {
-    const ai = this.getAI();
-    const responseStream = await ai.models.generateContentStream({
-      model: MODELS.FAST_FLASH,
-      contents: prompt,
-      config: { 
-        tools: [{ googleSearch: {} }],
-        systemInstruction: SYSTEM_INSTRUCTION,
-      },
-    });
+    try {
+      const ai = this.getAI();
+      const responseStream = await ai.models.generateContentStream({
+        model: MODELS.FAST_FLASH,
+        contents: prompt,
+        config: { 
+          tools: [{ googleSearch: {} }],
+          systemInstruction: SYSTEM_INSTRUCTION,
+        },
+      });
 
-    for await (const chunk of responseStream) {
-      const c = chunk as GenerateContentResponse;
+      for await (const chunk of responseStream) {
+        const c = chunk as GenerateContentResponse;
+        yield {
+          text: c.text || "",
+          sources: c.candidates?.[0]?.groundingMetadata?.groundingChunks
+            ?.filter(chunk => chunk.web)
+            .map(chunk => ({ 
+              title: chunk.web?.title || "Source", 
+              uri: chunk.web?.uri || "" 
+            })) || []
+        };
+      }
+    } catch (error) {
+      console.error('Error in streamTech:', error);
+      const errorMessage = error instanceof Error && error.message.includes('API key') 
+        ? error.message
+        : 'I apologize, but I encountered an error processing your request. This could be due to network issues, rate limiting, or configuration problems.';
       yield {
-        text: c.text || "",
-        sources: c.candidates?.[0]?.groundingMetadata?.groundingChunks
-          ?.filter(chunk => chunk.web)
-          .map(chunk => ({ 
-            title: chunk.web?.title || "Source", 
-            uri: chunk.web?.uri || "" 
-          })) || []
+        text: errorMessage,
+        sources: []
       };
     }
   }
 
   // Fallback for non-streaming needs
   async searchTech(prompt: string): Promise<{ text: string; sources: GroundingSource[] }> {
-    const ai = this.getAI();
-    const response = await ai.models.generateContent({
-      model: MODELS.FAST_FLASH,
-      contents: prompt,
-      config: { 
-        tools: [{ googleSearch: {} }],
-        systemInstruction: SYSTEM_INSTRUCTION,
-      },
-    });
-    
-    const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks
-      ?.filter(c => c.web)
-      .map(c => ({ title: c.web?.title || "Source", uri: c.web?.uri || "" })) || [];
+    try {
+      const ai = this.getAI();
+      const response = await ai.models.generateContent({
+        model: MODELS.FAST_FLASH,
+        contents: prompt,
+        config: { 
+          tools: [{ googleSearch: {} }],
+          systemInstruction: SYSTEM_INSTRUCTION,
+        },
+      });
       
-    return { text: response.text || "Connection stable, awaiting next transmission.", sources };
+      const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks
+        ?.filter(c => c.web)
+        .map(c => ({ title: c.web?.title || "Source", uri: c.web?.uri || "" })) || [];
+        
+      return { text: response.text || "Connection stable, awaiting next transmission.", sources };
+    } catch (error) {
+      console.error('Error in searchTech:', error);
+      const errorMessage = error instanceof Error && error.message.includes('API key')
+        ? error.message
+        : 'I apologize, but I encountered an error processing your request. This could be due to network issues, rate limiting, or configuration problems.';
+      return { 
+        text: errorMessage, 
+        sources: [] 
+      };
+    }
   }
 }
 
