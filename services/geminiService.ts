@@ -24,7 +24,7 @@ If a user asks about pricing, direct them to use the "B2B Quote" or WhatsApp but
 
 export class GeminiService {
   private getAI() {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
     if (!apiKey) {
       throw new Error('Gemini API key is not configured. Please set GEMINI_API_KEY in your .env.local file.');
     }
@@ -57,8 +57,11 @@ export class GeminiService {
       }
     } catch (error) {
       console.error('Error in streamTech:', error);
+      const errorMessage = error instanceof Error && error.message.includes('API key') 
+        ? error.message
+        : 'I apologize, but I encountered an error processing your request. This could be due to network issues, rate limiting, or configuration problems.';
       yield {
-        text: 'I apologize, but I encountered an error processing your request. Please ensure your API key is configured correctly.',
+        text: errorMessage,
         sources: []
       };
     }
@@ -84,8 +87,11 @@ export class GeminiService {
       return { text: response.text || "Connection stable, awaiting next transmission.", sources };
     } catch (error) {
       console.error('Error in searchTech:', error);
+      const errorMessage = error instanceof Error && error.message.includes('API key')
+        ? error.message
+        : 'I apologize, but I encountered an error processing your request. This could be due to network issues, rate limiting, or configuration problems.';
       return { 
-        text: 'I apologize, but I encountered an error processing your request. Please ensure your API key is configured correctly.', 
+        text: errorMessage, 
         sources: [] 
       };
     }
