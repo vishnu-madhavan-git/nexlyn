@@ -240,7 +240,7 @@ const AdminView = ({
   // Handle file upload to Cloudinary
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !editProduct) return;
     
     // Validate file type
     if (!file.type.startsWith('image/')) {

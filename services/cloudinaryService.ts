@@ -7,6 +7,11 @@ export const CLOUDINARY_CONFIG = {
   uploadPreset: process.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'unsigned_upload'
 };
 
+// Warn if using default values
+if (CLOUDINARY_CONFIG.cloudName === 'demo' || CLOUDINARY_CONFIG.uploadPreset === 'unsigned_upload') {
+  console.warn('⚠️ Cloudinary is using default configuration. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env.local file.');
+}
+
 export const cloudinary = new Cloudinary({
   cloud: {
     cloudName: CLOUDINARY_CONFIG.cloudName
@@ -14,6 +19,11 @@ export const cloudinary = new Cloudinary({
 });
 
 export const uploadImage = async (file: File): Promise<string> => {
+  // Check if Cloudinary is properly configured
+  if (CLOUDINARY_CONFIG.cloudName === 'demo' || CLOUDINARY_CONFIG.uploadPreset === 'unsigned_upload') {
+    throw new Error('Cloudinary is not properly configured. Please set up your environment variables.');
+  }
+
   const formData = new FormData();
   formData.append('file', file);
   formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
