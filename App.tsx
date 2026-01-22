@@ -6,6 +6,401 @@ import { gemini } from './services/geminiService';
 type ViewType = 'home' | 'products' | 'detail' | 'admin' | 'about';
 type ThemeType = 'light' | 'dark';
 
+// --- SUB-COMPONENTS ---
+
+const CategoryPill = React.memo(({ category, active, onClick }: { category: Category, active: boolean, onClick: () => void }) => {
+  const Icon = category.icon ? (ICONS as any)[category.icon] : null;
+  return (
+    <button 
+      onClick={onClick}
+      className={`group relative flex items-center gap-3 px-6 py-3.5 rounded-2xl border transition-all duration-300 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black
+        ${active 
+          ? 'bg-nexlyn border-nexlyn text-white shadow-xl shadow-nexlyn/30 translate-y-[-2px]' 
+          : 'glass-panel border-black/10 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-nexlyn/40 hover:text-nexlyn dark:hover:text-white hover:translate-y-[-1px]'
+        }`}
+    >
+      {Icon && <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-slate-500'}`} />}
+      <span className="text-[11px] font-black uppercase tracking-widest">{category.name}</span>
+      <span className={`px-2 py-0.5 rounded-full text-[9px] font-black border transition-colors
+        ${active 
+          ? 'bg-white/20 border-white/10 text-white' 
+          : 'bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/5 text-slate-500 group-hover:text-slate-300'
+        }`}>
+        {category.count}
+      </span>
+    </button>
+  );
+});
+
+const Logo = React.memo(({ onClick }: { onClick: () => void }) => (
+  <div 
+    className="flex items-center gap-4 cursor-pointer group shrink-0 select-none" 
+    onClick={onClick}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => e.key === 'Enter' && onClick()}
+  >
+    <div className="relative">
+        <div className="absolute inset-0 bg-nexlyn blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
+        <svg width="48" height="32" viewBox="0 0 100 66" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative transition-transform group-hover:scale-110">
+          <path d="M10 66L28 0H46L28 66H10Z" fill="#E60026" />
+          <path d="M42 66L60 0H78L60 66H42Z" fill="currentColor" className="text-slate-900 dark:text-white" fillOpacity="0.9" />
+          <path d="M30 33L85 0H95L40 33L30 33Z" fill="#E60026" />
+          <path d="M5 33L60 66H70L15 33L5 33Z" fill="currentColor" className="text-slate-900 dark:text-white" fillOpacity="0.9" />
+        </svg>
+    </div>
+    <div className="flex flex-col">
+      <span className="font-extrabold text-2xl tracking-[0.15em] text-slate-900 dark:text-white leading-tight uppercase font-sans">NEXLYN</span>
+      <span className="text-[8px] font-black tracking-[0.55em] uppercase opacity-60 text-nexlyn leading-none">MASTER DISTRIBUTOR</span>
+    </div>
+  </div>
+));
+
+const Header = React.memo(({ isScrolled, searchQuery, setSearchQuery, view, setView, theme, toggleTheme, openWhatsApp }: any) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when view changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [view]);
+
+  return (
+    <>
+      <header className={`fixed top-0 w-full z-[100] transition-all duration-500 ${isScrolled ? 'py-4 bg-white/90 dark:bg-black/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5 shadow-sm' : 'py-6 md:py-8'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center gap-8">
+          <Logo onClick={() => { setView('home'); setSearchQuery(''); }} />
+          
+          <div className="flex-1 max-w-md relative hidden md:block">
+            <input 
+              type="text"
+              placeholder="Search core inventory..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (view !== 'products' && e.target.value.length > 0) setView('products');
+              }}
+              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-3 pl-11 pr-11 text-[11px] font-bold text-slate-900 dark:text-white outline-none focus:border-nexlyn focus:bg-white/10 transition-all placeholder:text-slate-500"
+            />
+            <ICONS.Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-8 shrink-0">
+            {['Home', 'Products', 'About'].map((item) => (
+              <button 
+                key={item} 
+                onClick={() => { setView(item.toLowerCase() as any); setSearchQuery(''); }} 
+                className={`text-[10px] font-black uppercase tracking-widest transition-all focus:outline-none focus:text-nexlyn ${view === item.toLowerCase() ? 'text-nexlyn border-b-2 border-nexlyn pb-1' : 'text-slate-600 dark:text-slate-300 hover:text-nexlyn'}`}
+              >{item}</button>
+            ))}
+            <button onClick={() => openWhatsApp('general')} className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:text-nexlyn focus:outline-none focus:text-nexlyn">Contact</button>
+          </nav>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <button 
+              onClick={toggleTheme} 
+              aria-label="Toggle Theme"
+              className="p-3 rounded-2xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:border-nexlyn transition-all text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-2 focus:ring-nexlyn"
+            >
+              {theme === 'dark' ? <ICONS.Globe className="w-4 h-4" /> : <ICONS.Grid className="w-4 h-4" />}
+            </button>
+            <button onClick={() => setView('admin')} aria-label="Admin Access" className="p-2 opacity-20 hover:opacity-100 transition-opacity hidden sm:block text-slate-900 dark:text-white focus:opacity-100 focus:outline-none"><ICONS.Shield className="w-5 h-5" /></button>
+            
+            {/* Mobile Hamburger */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle Mobile Menu"
+              className="lg:hidden p-3 rounded-2xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 text-slate-900 dark:text-white hover:border-nexlyn transition-all"
+            >
+              {mobileMenuOpen ? <ICONS.X className="w-4 h-4" /> : <ICONS.Menu className="w-4 h-4" />}
+            </button>
+
+            <button onClick={() => openWhatsApp('general')} className="hidden sm:block px-6 py-3 bg-nexlyn text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-xl shadow-nexlyn/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-nexlyn dark:focus:ring-offset-black">Get Quote</button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[90] bg-white/95 dark:bg-black/95 backdrop-blur-xl lg:hidden flex flex-col pt-32 px-6 animate-in slide-in-from-top-10 duration-300">
+           <div className="space-y-6 flex flex-col items-start">
+             {['Home', 'Products', 'About'].map((item) => (
+                <button 
+                  key={item} 
+                  onClick={() => { setView(item.toLowerCase() as any); setMobileMenuOpen(false); }} 
+                  className={`text-3xl font-black uppercase tracking-tighter ${view === item.toLowerCase() ? 'text-nexlyn' : 'text-slate-900 dark:text-white'}`}
+                >{item}</button>
+              ))}
+              <button onClick={() => { openWhatsApp('general'); setMobileMenuOpen(false); }} className="text-3xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Contact Support</button>
+              
+              <div className="w-full h-px bg-black/5 dark:bg-white/10 my-6" />
+              
+              <button onClick={() => { setView('admin'); setMobileMenuOpen(false); }} className="flex items-center gap-3 text-sm font-bold text-slate-500 uppercase tracking-widest">
+                <ICONS.Shield className="w-4 h-4" /> Admin Console
+              </button>
+           </div>
+        </div>
+      )}
+    </>
+  );
+});
+
+const WhyNexlyn = () => (
+  <section className="py-40 px-6 max-w-7xl mx-auto">
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-10">
+        <div className="space-y-6">
+          <div className="inline-flex items-center gap-4 text-nexlyn">
+              <div className="w-12 h-[2px] bg-nexlyn" />
+              <span className="text-[11px] font-black uppercase tracking-[0.5em]">The Distinction</span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-black italic uppercase text-slate-900 dark:text-white leading-[0.85] tracking-tighter">WHY <span className="text-nexlyn">NEXLYN.</span></h2>
+        </div>
+    </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {[
+        { title: "Direct Master Status", desc: "No intermediaries. We are a Tier-1 authorized distribution point for genuine MikroTik® hardware in the MEA region.", icon: <ICONS.Shield className="w-8 h-8"/> },
+        { title: "Zero Latency Logistics", desc: "Our Dubai hub ensures the fastest turnaround times for air and sea freight across 130+ countries.", icon: <ICONS.Bolt className="w-8 h-8"/> },
+        { title: "Engineering Support", desc: "Access direct technical assistance for complex RouterOS v7 deployments, BGP peering, and data center switching.", icon: <ICONS.Router className="w-8 h-8"/> }
+      ].map((item, i) => (
+        <div key={i} className="glass-panel p-10 rounded-[3rem] border border-black/5 dark:border-white/5 space-y-6 hover:translate-y-[-10px] transition-all duration-500 group">
+          <div className="w-16 h-16 bg-nexlyn/10 rounded-2xl flex items-center justify-center text-nexlyn group-hover:bg-nexlyn group-hover:text-white transition-colors">
+            {item.icon}
+          </div>
+          <h3 className="text-2xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">{item.title}</h3>
+          <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{item.desc}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+const ResellerProgram = ({ openWhatsApp }: { openWhatsApp: (t: 'reseller') => void }) => (
+  <section className="py-40 px-6 max-w-7xl mx-auto relative overflow-hidden rounded-[4rem] glass-panel border border-nexlyn/20">
+    <div className="absolute inset-0 bg-grid opacity-5" />
+    <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div className="p-10 space-y-12">
+        <div className="space-y-6">
+          <div className="inline-flex items-center gap-4 text-nexlyn">
+              <div className="w-12 h-[2px] bg-nexlyn" />
+              <span className="text-[11px] font-black uppercase tracking-[0.5em]">Growth Partnership</span>
+          </div>
+          <h2 className="text-6xl md:text-8xl font-black italic uppercase text-slate-900 dark:text-white leading-[0.85] tracking-tighter">B2B <span className="text-nexlyn">PORTAL.</span></h2>
+          <p className="text-2xl text-slate-500 dark:text-slate-400 font-bold leading-relaxed max-w-lg">Become an authorized regional partner. Access tiered pricing, priority stock allocation, and technical certification paths.</p>
+        </div>
+        <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
+              <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Volume-based Discretionary Discounts</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
+              <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Dedicated Regional Account Manager</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
+              <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Advanced RMA Replacement Protocol</span>
+            </div>
+        </div>
+        <button onClick={() => openWhatsApp('reseller')} className="px-14 py-7 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.05] transition-all focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black">Submit Partnership Request</button>
+      </div>
+      <div className="hidden lg:block relative p-20">
+          <div className="absolute inset-0 bg-nexlyn/20 blur-[100px] rounded-full" />
+          <div className="relative glass-panel rounded-[3rem] border border-white/10 p-10 rotate-3 shadow-2xl">
+            <div className="flex justify-between items-center mb-8">
+                <div className="w-12 h-12 bg-white/10 rounded-xl" />
+                <div className="px-4 py-1.5 bg-nexlyn/20 text-nexlyn rounded-full text-[10px] font-black uppercase tracking-widest">Master Tier Partner</div>
+            </div>
+            <div className="space-y-4">
+                <div className="h-4 w-3/4 bg-white/5 rounded-full" />
+                <div className="h-4 w-1/2 bg-white/5 rounded-full" />
+                <div className="h-32 w-full bg-white/5 rounded-2xl" />
+            </div>
+            <div className="mt-10 flex justify-end">
+                <div className="w-24 h-10 bg-nexlyn rounded-lg" />
+            </div>
+          </div>
+      </div>
+    </div>
+  </section>
+);
+
+const AdminView = ({ 
+  isAdmin, setIsAdmin, 
+  products, setProducts, 
+  waNumber, setWaNumber, 
+  address, setAddress, 
+  aboutContent, setAboutContent 
+}: any) => {
+  const [passInput, setPassInput] = useState('');
+  const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
+
+  const stats = useMemo(() => ({
+    total: products.length,
+    routing: products.filter((p: Product) => p.category === 'Routing').length,
+    switching: products.filter((p: Product) => p.category === 'Switching').length,
+    wireless: products.filter((p: Product) => p.category === 'Wireless').length,
+  }), [products]);
+
+  return (
+    <div className="pt-32 px-6 max-w-7xl mx-auto space-y-12 pb-40 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {!isAdmin ? (
+        <div className="max-w-md mx-auto glass-panel p-12 rounded-[2.5rem] text-center space-y-8 border border-nexlyn/20">
+          <div className="w-20 h-20 bg-nexlyn/10 rounded-full flex items-center justify-center mx-auto">
+              <ICONS.Shield className="w-10 h-10 text-nexlyn" />
+          </div>
+          <h2 className="text-3xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Security Authorization</h2>
+          <div className="space-y-4">
+            <input 
+              type="password" 
+              placeholder="Enter Access Token" 
+              className="w-full bg-black/5 dark:bg-black border border-black/10 dark:border-white/10 p-5 rounded-2xl text-center outline-none focus:border-nexlyn transition-all font-bold tracking-[0.5em]"
+              value={passInput}
+              onChange={e => setPassInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && (passInput === ADMIN_PASSCODE ? setIsAdmin(true) : alert('Access Denied'))}
+            />
+            <button 
+              onClick={() => passInput === ADMIN_PASSCODE ? setIsAdmin(true) : alert('Access Denied')}
+              className="w-full py-5 bg-nexlyn text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-nexlyn/20 focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black"
+            >Establish Connection</button>
+          </div>
+        </div>
+      ) : (
+        <div className="space-y-16 animate-in fade-in duration-700">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="space-y-2">
+                <h2 className="text-5xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Inventory <span className="text-nexlyn">Management</span></h2>
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Global Master Distribution Node: Active</p>
+            </div>
+            <button onClick={() => setIsAdmin(false)} className="px-6 py-3 border border-black/10 dark:border-white/10 rounded-xl text-[10px] font-black uppercase text-slate-500 hover:text-nexlyn transition-colors">Exit Session</button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {[
+                { label: 'Total SKUs', val: stats.total, color: 'text-nexlyn' },
+                { label: 'Routing', val: stats.routing, valColor: 'text-nexlyn' },
+                { label: 'Switching', val: stats.switching, valColor: 'text-blue-500' },
+                { label: 'Wireless', val: stats.wireless, valColor: 'text-green-500' }
+              ].map(s => (
+                <div key={s.label} className="glass-panel p-8 rounded-3xl border border-black/5 dark:border-white/5">
+                  <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">{s.label}</div>
+                  <div className={`text-4xl font-black ${s.valColor || 'text-slate-900 dark:text-white'}`}>{s.val}</div>
+                </div>
+              ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="glass-panel p-10 rounded-[2.5rem] space-y-8">
+              <h3 className="text-lg font-black text-nexlyn uppercase tracking-widest border-b border-nexlyn/20 pb-4">Global Constants</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-500">Distribution WhatsApp</label>
+                  <input type="text" value={waNumber} onChange={e => setWaNumber(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-xl text-sm font-bold" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-500">Distribution Hub Address</label>
+                  <input type="text" value={address} onChange={e => setAddress(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-xl text-sm font-bold" />
+                </div>
+              </div>
+            </div>
+            <div className="glass-panel p-10 rounded-[2.5rem] space-y-8">
+              <h3 className="text-lg font-black text-nexlyn uppercase tracking-widest border-b border-nexlyn/20 pb-4">Corporate Narrative</h3>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase text-slate-500">Bio / About Mission</label>
+                <textarea value={aboutContent} onChange={e => setAboutContent(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm h-48 resize-none font-medium leading-relaxed" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-10">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Product Database</h3>
+              <button 
+                onClick={() => setEditProduct({ id: Date.now().toString(), name: '', code: '', category: 'Routing', specs: [], status: 'In Stock', description: '', imageUrl: '' })}
+                className="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-nexlyn hover:text-white transition-all shadow-xl"
+              >Register New Hardware</button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {products.map((p: Product) => (
+                <div key={p.id} className="glass-panel p-6 rounded-3xl flex justify-between items-center border border-black/5 dark:border-white/5 group hover:border-nexlyn/20 transition-all">
+                  <div className="flex items-center gap-5 flex-1 truncate">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-nexlyn/20 to-black flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5">
+                      <img src={p.imageUrl} className="w-full h-full object-cover opacity-80 mix-blend-screen" />
+                    </div>
+                    <div className="truncate">
+                      <div className="font-black text-slate-900 dark:text-white truncate uppercase italic">{p.name}</div>
+                      <div className="text-[9px] font-black text-nexlyn uppercase tracking-widest">{p.category}</div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => setEditProduct(p)} className="p-3 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-xl">Edit</button>
+                    <button onClick={() => { if(confirm('Delete SKU?')) setProducts(products.filter((item: Product) => item.id !== p.id)) }} className="p-3 text-red-500/30 hover:text-red-500 transition-colors bg-red-500/5 rounded-xl">Del</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {editProduct && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300">
+          <div className="w-full max-w-3xl glass-panel p-12 rounded-[3rem] space-y-10 max-h-[90vh] overflow-y-auto no-scrollbar border border-nexlyn/20 shadow-2xl">
+            <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-6">
+                <h3 className="text-3xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">SKU <span className="text-nexlyn">Configuration</span></h3>
+                <button onClick={() => setEditProduct(null)} className="text-4xl leading-none text-slate-500 hover:text-white">&times;</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Formal Name</label>
+                <input value={editProduct.name} onChange={e => setEditProduct({...editProduct, name: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Hardware ID / Model</label>
+                <input value={editProduct.code} onChange={e => setEditProduct({...editProduct, code: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Market Category</label>
+                <select value={editProduct.category} onChange={e => setEditProduct({...editProduct, category: e.target.value as any})} className="w-full bg-slate-100 dark:bg-black border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold text-slate-900 dark:text-white focus:border-nexlyn focus:outline-none transition-colors">
+                  {['Routing', 'Switching', 'Wireless', '5G/LTE', 'IoT', 'Accessories'].map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Image Source (Visuals)</label>
+                <input value={editProduct.imageUrl} onChange={e => setEditProduct({...editProduct, imageUrl: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" />
+              </div>
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Technical Overview</label>
+              <textarea value={editProduct.description} onChange={e => setEditProduct({...editProduct, description: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 rounded-2xl text-sm h-32 resize-none leading-relaxed focus:border-nexlyn focus:outline-none transition-colors" />
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Engineering Specs (Comma separated)</label>
+              <input value={editProduct.specs?.join(', ')} onChange={e => setEditProduct({...editProduct, specs: e.target.value.split(',').map(s => s.trim())})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" />
+            </div>
+            <div className="flex gap-6 pt-6">
+              <button 
+                onClick={() => {
+                  if (products.find((p: Product) => p.id === editProduct.id)) {
+                    setProducts(products.map((p: Product) => p.id === editProduct.id ? editProduct as Product : p));
+                  } else {
+                    setProducts([...products, editProduct as Product]);
+                  }
+                  setEditProduct(null);
+                }}
+                className="flex-1 py-5 bg-nexlyn text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl shadow-nexlyn/20 hover:scale-[1.02] transition-transform"
+              >Commit SKU to Ledger</button>
+              <button onClick={() => setEditProduct(null)} className="flex-1 py-5 bg-black/10 dark:bg-white/10 text-slate-900 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black/20 dark:hover:bg-white/20 transition-all">Abort</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- MAIN APP COMPONENT ---
+
 const App: React.FC = () => {
   // --- THEME STATE ---
   const [theme, setTheme] = useState<ThemeType>(() => {
@@ -32,10 +427,8 @@ const App: React.FC = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   
-  // --- ADMIN STATE ---
+  // --- ADMIN STATE (Only auth needed here, rest is in AdminView) ---
   const [isAdmin, setIsAdmin] = useState(false);
-  const [passInput, setPassInput] = useState('');
-  const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
 
   // --- AI CHAT STATE ---
   const [chatOpen, setChatOpen] = useState(false);
@@ -88,6 +481,11 @@ const App: React.FC = () => {
       }, 8000);
       return () => clearInterval(interval);
     }
+  }, [view]);
+
+  // Scroll to top when view changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [view]);
 
   // --- COMPUTED ---
@@ -166,343 +564,18 @@ const App: React.FC = () => {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const CategoryPill = ({ category, active, onClick }: { category: Category, active: boolean, onClick: () => void }) => {
-    const Icon = category.icon ? (ICONS as any)[category.icon] : null;
-    return (
-      <button 
-        onClick={onClick}
-        className={`group relative flex items-center gap-3 px-6 py-3.5 rounded-2xl border transition-all duration-300 whitespace-nowrap
-          ${active 
-            ? 'bg-nexlyn border-nexlyn text-white shadow-xl shadow-nexlyn/30 translate-y-[-2px]' 
-            : 'glass-panel border-black/10 dark:border-white/5 text-slate-600 dark:text-slate-400 hover:border-nexlyn/40 hover:text-nexlyn dark:hover:text-white hover:translate-y-[-1px]'
-          }`}
-      >
-        {Icon && <Icon className={`w-4 h-4 transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-slate-500'}`} />}
-        <span className="text-[11px] font-black uppercase tracking-widest">{category.name}</span>
-        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black border transition-colors
-          ${active 
-            ? 'bg-white/20 border-white/10 text-white' 
-            : 'bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/5 text-slate-500 group-hover:text-slate-300'
-          }`}>
-          {category.count}
-        </span>
-      </button>
-    );
-  };
-
-  const Logo = () => (
-    <div 
-      className="flex items-center gap-4 cursor-pointer group shrink-0" 
-      onClick={() => { setView('home'); setSearchQuery(''); setSelectedCat('All'); window.scrollTo(0,0); }}
-    >
-      <div className="relative">
-         <div className="absolute inset-0 bg-nexlyn blur-lg opacity-0 group-hover:opacity-40 transition-opacity duration-500" />
-         <svg width="48" height="32" viewBox="0 0 100 66" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative transition-transform group-hover:scale-110">
-            <path d="M10 66L28 0H46L28 66H10Z" fill="#E60026" />
-            <path d="M42 66L60 0H78L60 66H42Z" fill="currentColor" className="text-slate-900 dark:text-white" fillOpacity="0.9" />
-            <path d="M30 33L85 0H95L40 33L30 33Z" fill="#E60026" />
-            <path d="M5 33L60 66H70L15 33L5 33Z" fill="currentColor" className="text-slate-900 dark:text-white" fillOpacity="0.9" />
-         </svg>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-extrabold text-2xl tracking-[0.15em] text-slate-900 dark:text-white leading-tight uppercase font-sans">NEXLYN</span>
-        <span className="text-[8px] font-black tracking-[0.55em] uppercase opacity-60 text-nexlyn leading-none">MASTER DISTRIBUTOR</span>
-      </div>
-    </div>
-  );
-
-  const Header = () => (
-    <header className={`fixed top-0 w-full z-[100] transition-all duration-500 ${isScrolled ? 'py-4 bg-white/90 dark:bg-black/80 backdrop-blur-xl border-b border-black/5 dark:border-white/5 shadow-sm' : 'py-8'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center gap-8">
-        <Logo />
-        
-        <div className="flex-1 max-w-md relative hidden md:block">
-          <input 
-            type="text"
-            placeholder="Search core inventory..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              if (view !== 'products' && e.target.value.length > 0) setView('products');
-            }}
-            className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl py-3 pl-11 pr-11 text-[11px] font-bold text-slate-900 dark:text-white outline-none focus:border-nexlyn focus:bg-white/10 transition-all placeholder:text-slate-500"
-          />
-          <ICONS.Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-        </div>
-
-        <nav className="hidden lg:flex items-center gap-8 shrink-0">
-          {['Home', 'Products', 'About'].map((item) => (
-            <button 
-              key={item} 
-              onClick={() => { setView(item.toLowerCase() as any); setSearchQuery(''); }} 
-              className={`text-[10px] font-black uppercase tracking-widest transition-all ${view === item.toLowerCase() ? 'text-nexlyn border-b-2 border-nexlyn pb-1' : 'text-slate-600 dark:text-slate-300 hover:text-nexlyn'}`}
-            >{item}</button>
-          ))}
-          <button onClick={() => openWhatsApp('general')} className="text-[10px] font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 hover:text-nexlyn">Contact</button>
-        </nav>
-
-        <div className="flex items-center gap-4 shrink-0">
-          <button 
-            onClick={toggleTheme} 
-            className="p-3 rounded-2xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:border-nexlyn transition-all text-slate-600 dark:text-slate-400"
-          >
-            {theme === 'dark' ? <ICONS.Globe className="w-4 h-4" /> : <ICONS.Grid className="w-4 h-4" />}
-          </button>
-          <button onClick={() => setView('admin')} className="p-2 opacity-20 hover:opacity-100 transition-opacity hidden sm:block text-slate-900 dark:text-white"><ICONS.Shield className="w-5 h-5" /></button>
-          <button onClick={() => openWhatsApp('general')} className="px-6 py-3 bg-nexlyn text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-xl shadow-nexlyn/20">Get Quote</button>
-        </div>
-      </div>
-    </header>
-  );
-
-  const WhyNexlyn = () => (
-    <section className="py-40 px-6 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-10">
-         <div className="space-y-6">
-            <div className="inline-flex items-center gap-4 text-nexlyn">
-               <div className="w-12 h-[2px] bg-nexlyn" />
-               <span className="text-[11px] font-black uppercase tracking-[0.5em]">The Distinction</span>
-            </div>
-            <h2 className="text-5xl md:text-7xl font-black italic uppercase text-slate-900 dark:text-white leading-[0.85] tracking-tighter">WHY <span className="text-nexlyn">NEXLYN.</span></h2>
-         </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {[
-          { title: "Direct Master Status", desc: "No intermediaries. We are a Tier-1 authorized distribution point for genuine MikroTik® hardware in the MEA region.", icon: <ICONS.Shield className="w-8 h-8"/> },
-          { title: "Zero Latency Logistics", desc: "Our Dubai hub ensures the fastest turnaround times for air and sea freight across 130+ countries.", icon: <ICONS.Bolt className="w-8 h-8"/> },
-          { title: "Engineering Support", desc: "Access direct technical assistance for complex RouterOS v7 deployments, BGP peering, and data center switching.", icon: <ICONS.Router className="w-8 h-8"/> }
-        ].map((item, i) => (
-          <div key={i} className="glass-panel p-10 rounded-[3rem] border border-black/5 dark:border-white/5 space-y-6 hover:translate-y-[-10px] transition-all duration-500 group">
-            <div className="w-16 h-16 bg-nexlyn/10 rounded-2xl flex items-center justify-center text-nexlyn group-hover:bg-nexlyn group-hover:text-white transition-colors">
-              {item.icon}
-            </div>
-            <h3 className="text-2xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">{item.title}</h3>
-            <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed">{item.desc}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-
-  const ResellerProgram = () => (
-    <section className="py-40 px-6 max-w-7xl mx-auto relative overflow-hidden rounded-[4rem] glass-panel border border-nexlyn/20">
-      <div className="absolute inset-0 bg-grid opacity-5" />
-      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-        <div className="p-10 space-y-12">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-4 text-nexlyn">
-               <div className="w-12 h-[2px] bg-nexlyn" />
-               <span className="text-[11px] font-black uppercase tracking-[0.5em]">Growth Partnership</span>
-            </div>
-            <h2 className="text-6xl md:text-8xl font-black italic uppercase text-slate-900 dark:text-white leading-[0.85] tracking-tighter">B2B <span className="text-nexlyn">PORTAL.</span></h2>
-            <p className="text-2xl text-slate-500 dark:text-slate-400 font-bold leading-relaxed max-w-lg">Become an authorized regional partner. Access tiered pricing, priority stock allocation, and technical certification paths.</p>
-          </div>
-          <div className="flex flex-col gap-6">
-             <div className="flex items-center gap-4">
-                <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
-                <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Volume-based Discretionary Discounts</span>
-             </div>
-             <div className="flex items-center gap-4">
-                <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
-                <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Dedicated Regional Account Manager</span>
-             </div>
-             <div className="flex items-center gap-4">
-                <div className="w-6 h-6 rounded-full bg-nexlyn/20 flex items-center justify-center"><ICONS.Bolt className="w-3 h-3 text-nexlyn" /></div>
-                <span className="text-sm font-black uppercase text-slate-700 dark:text-slate-300">Advanced RMA Replacement Protocol</span>
-             </div>
-          </div>
-          <button onClick={() => openWhatsApp('reseller')} className="px-14 py-7 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.05] transition-all">Submit Partnership Request</button>
-        </div>
-        <div className="hidden lg:block relative p-20">
-           <div className="absolute inset-0 bg-nexlyn/20 blur-[100px] rounded-full" />
-           <div className="relative glass-panel rounded-[3rem] border border-white/10 p-10 rotate-3 shadow-2xl">
-              <div className="flex justify-between items-center mb-8">
-                 <div className="w-12 h-12 bg-white/10 rounded-xl" />
-                 <div className="px-4 py-1.5 bg-nexlyn/20 text-nexlyn rounded-full text-[10px] font-black uppercase tracking-widest">Master Tier Partner</div>
-              </div>
-              <div className="space-y-4">
-                 <div className="h-4 w-3/4 bg-white/5 rounded-full" />
-                 <div className="h-4 w-1/2 bg-white/5 rounded-full" />
-                 <div className="h-32 w-full bg-white/5 rounded-2xl" />
-              </div>
-              <div className="mt-10 flex justify-end">
-                 <div className="w-24 h-10 bg-nexlyn rounded-lg" />
-              </div>
-           </div>
-        </div>
-      </div>
-    </section>
-  );
-
-  const AdminView = () => {
-    const stats = useMemo(() => ({
-      total: products.length,
-      routing: products.filter(p => p.category === 'Routing').length,
-      switching: products.filter(p => p.category === 'Switching').length,
-      wireless: products.filter(p => p.category === 'Wireless').length,
-    }), [products]);
-
-    return (
-      <div className="pt-32 px-6 max-w-7xl mx-auto space-y-12 pb-40 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        {!isAdmin ? (
-          <div className="max-w-md mx-auto glass-panel p-12 rounded-[2.5rem] text-center space-y-8 border border-nexlyn/20">
-            <div className="w-20 h-20 bg-nexlyn/10 rounded-full flex items-center justify-center mx-auto">
-               <ICONS.Shield className="w-10 h-10 text-nexlyn" />
-            </div>
-            <h2 className="text-3xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Security Authorization</h2>
-            <div className="space-y-4">
-              <input 
-                type="password" 
-                placeholder="Enter Access Token" 
-                className="w-full bg-black/5 dark:bg-black border border-black/10 dark:border-white/10 p-5 rounded-2xl text-center outline-none focus:border-nexlyn transition-all font-bold tracking-[0.5em]"
-                value={passInput}
-                onChange={e => setPassInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && (passInput === ADMIN_PASSCODE ? setIsAdmin(true) : alert('Access Denied'))}
-              />
-              <button 
-                onClick={() => passInput === ADMIN_PASSCODE ? setIsAdmin(true) : alert('Access Denied')}
-                className="w-full py-5 bg-nexlyn text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl shadow-nexlyn/20"
-              >Establish Connection</button>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-16 animate-in fade-in duration-700">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-              <div className="space-y-2">
-                 <h2 className="text-5xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Inventory <span className="text-nexlyn">Management</span></h2>
-                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Global Master Distribution Node: Active</p>
-              </div>
-              <button onClick={() => setIsAdmin(false)} className="px-6 py-3 border border-black/10 dark:border-white/10 rounded-xl text-[10px] font-black uppercase text-slate-500 hover:text-nexlyn transition-colors">Exit Session</button>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-               {[
-                 { label: 'Total SKUs', val: stats.total, color: 'text-nexlyn' },
-                 { label: 'Routing', val: stats.routing, valColor: 'text-nexlyn' },
-                 { label: 'Switching', val: stats.switching, valColor: 'text-blue-500' },
-                 { label: 'Wireless', val: stats.wireless, valColor: 'text-green-500' }
-               ].map(s => (
-                 <div key={s.label} className="glass-panel p-8 rounded-3xl border border-black/5 dark:border-white/5">
-                   <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">{s.label}</div>
-                   <div className={`text-4xl font-black ${s.valColor || 'text-slate-900 dark:text-white'}`}>{s.val}</div>
-                 </div>
-               ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <div className="glass-panel p-10 rounded-[2.5rem] space-y-8">
-                <h3 className="text-lg font-black text-nexlyn uppercase tracking-widest border-b border-nexlyn/20 pb-4">Global Constants</h3>
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Distribution WhatsApp</label>
-                    <input type="text" value={waNumber} onChange={e => setWaNumber(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-xl text-sm font-bold" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase text-slate-500">Distribution Hub Address</label>
-                    <input type="text" value={address} onChange={e => setAddress(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-xl text-sm font-bold" />
-                  </div>
-                </div>
-              </div>
-              <div className="glass-panel p-10 rounded-[2.5rem] space-y-8">
-                <h3 className="text-lg font-black text-nexlyn uppercase tracking-widest border-b border-nexlyn/20 pb-4">Corporate Narrative</h3>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase text-slate-500">Bio / About Mission</label>
-                  <textarea value={aboutContent} onChange={e => setAboutContent(e.target.value)} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm h-48 resize-none font-medium leading-relaxed" />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-10">
-              <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Product Database</h3>
-                <button 
-                  onClick={() => setEditProduct({ id: Date.now().toString(), name: '', code: '', category: 'Routing', specs: [], status: 'In Stock', description: '', imageUrl: '' })}
-                  className="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-nexlyn hover:text-white transition-all shadow-xl"
-                >Register New Hardware</button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map(p => (
-                  <div key={p.id} className="glass-panel p-6 rounded-3xl flex justify-between items-center border border-black/5 dark:border-white/5 group hover:border-nexlyn/20 transition-all">
-                    <div className="flex items-center gap-5 flex-1 truncate">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-nexlyn/20 to-black flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5">
-                        <img src={p.imageUrl} className="w-full h-full object-cover opacity-80 mix-blend-screen" />
-                      </div>
-                      <div className="truncate">
-                        <div className="font-black text-slate-900 dark:text-white truncate uppercase italic">{p.name}</div>
-                        <div className="text-[9px] font-black text-nexlyn uppercase tracking-widest">{p.category}</div>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => setEditProduct(p)} className="p-3 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-xl">Edit</button>
-                      <button onClick={() => { if(confirm('Delete SKU?')) setProducts(products.filter(item => item.id !== p.id)) }} className="p-3 text-red-500/30 hover:text-red-500 transition-colors bg-red-500/5 rounded-xl">Del</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {editProduct && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300">
-            <div className="w-full max-w-3xl glass-panel p-12 rounded-[3rem] space-y-10 max-h-[90vh] overflow-y-auto no-scrollbar border border-nexlyn/20 shadow-2xl">
-              <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-6">
-                 <h3 className="text-3xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">SKU <span className="text-nexlyn">Configuration</span></h3>
-                 <button onClick={() => setEditProduct(null)} className="text-4xl leading-none text-slate-500 hover:text-white">&times;</button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Formal Name</label>
-                  <input value={editProduct.name} onChange={e => setEditProduct({...editProduct, name: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold" />
-                </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Hardware ID / Model</label>
-                  <input value={editProduct.code} onChange={e => setEditProduct({...editProduct, code: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold" />
-                </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Market Category</label>
-                  <select value={editProduct.category} onChange={e => setEditProduct({...editProduct, category: e.target.value as any})} className="w-full bg-slate-100 dark:bg-black border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold text-slate-900 dark:text-white">
-                    {['Routing', 'Switching', 'Wireless', '5G/LTE', 'IoT', 'Accessories'].map(c => <option key={c} value={c}>{c}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Image Source (Visuals)</label>
-                  <input value={editProduct.imageUrl} onChange={e => setEditProduct({...editProduct, imageUrl: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Technical Overview</label>
-                <textarea value={editProduct.description} onChange={e => setEditProduct({...editProduct, description: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 rounded-2xl text-sm h-32 resize-none leading-relaxed" />
-              </div>
-              <div className="space-y-3">
-                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Engineering Specs (Comma separated)</label>
-                <input value={editProduct.specs?.join(', ')} onChange={e => setEditProduct({...editProduct, specs: e.target.value.split(',').map(s => s.trim())})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold" />
-              </div>
-              <div className="flex gap-6 pt-6">
-                <button 
-                  onClick={() => {
-                    if (products.find(p => p.id === editProduct.id)) {
-                      setProducts(products.map(p => p.id === editProduct.id ? editProduct as Product : p));
-                    } else {
-                      setProducts([...products, editProduct as Product]);
-                    }
-                    setEditProduct(null);
-                  }}
-                  className="flex-1 py-5 bg-nexlyn text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl shadow-nexlyn/20 hover:scale-[1.02] transition-transform"
-                >Commit SKU to Ledger</button>
-                <button onClick={() => setEditProduct(null)} className="flex-1 py-5 bg-black/10 dark:bg-white/10 text-slate-900 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black/20 dark:hover:bg-white/20 transition-all">Abort</button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen transition-colors duration-500 flex flex-col">
-      <Header />
+      <Header 
+        isScrolled={isScrolled} 
+        searchQuery={searchQuery} 
+        setSearchQuery={setSearchQuery} 
+        view={view} 
+        setView={setView} 
+        theme={theme} 
+        toggleTheme={toggleTheme} 
+        openWhatsApp={openWhatsApp}
+      />
       
       <main className="flex-1">
         {view === 'home' && (
@@ -523,6 +596,7 @@ const App: React.FC = () => {
                     src={slide.image} 
                     className={`w-full h-full object-cover transition-transform duration-[8000ms] ease-linear ${idx === slideIndex ? 'scale-110' : 'scale-100'}`} 
                     alt={slide.categoryId}
+                    loading="lazy"
                   />
                   <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-gradient-to-b from-black/70 via-black/30 to-black/90' : 'bg-gradient-to-b from-white/70 via-white/30 to-white/90'}`} />
                   <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]' : 'bg-[radial-gradient(circle_at_center,transparent_0%,rgba(255,255,255,0.8)_100%)]'}`} />
@@ -555,13 +629,13 @@ const App: React.FC = () => {
                 <div className="flex flex-wrap justify-center gap-6 pt-10 stagger-4">
                   <button 
                     onClick={(e) => { e.stopPropagation(); setView('products'); window.scrollTo(0,0); }} 
-                    className="px-14 py-6 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.05] hover:shadow-nexlyn/60 transition-all active:scale-95"
+                    className="px-14 py-6 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.05] hover:shadow-nexlyn/60 transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black"
                   >
                     Browse Portfolio
                   </button>
                   <button 
                     onClick={(e) => { e.stopPropagation(); openWhatsApp('reseller'); }} 
-                    className="px-14 py-6 glass-panel border border-black/10 dark:border-white/20 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-black/5 dark:hover:bg-white/10 transition-all backdrop-blur-xl"
+                    className="px-14 py-6 glass-panel border border-black/10 dark:border-white/20 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-black/5 dark:hover:bg-white/10 transition-all backdrop-blur-xl focus:outline-none focus:ring-2 focus:ring-white"
                   >
                     B2B Application
                   </button>
@@ -597,7 +671,7 @@ const App: React.FC = () => {
             </div>
 
             <WhyNexlyn />
-            <ResellerProgram />
+            <ResellerProgram openWhatsApp={openWhatsApp} />
 
             <section className="py-40 px-6 max-w-7xl mx-auto">
                <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-10">
@@ -621,9 +695,16 @@ const App: React.FC = () => {
                </div>
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {filteredProducts.map(p => (
-                    <div key={p.id} onClick={() => { setActiveProduct(p); setView('detail'); window.scrollTo(0,0); }} className="group glass-panel p-8 rounded-[2.5rem] border border-black/5 dark:border-white/5 hover:border-nexlyn/40 transition-all cursor-pointer overflow-hidden flex flex-col h-full hover:translate-y-[-10px] duration-500">
+                    <div 
+                      key={p.id} 
+                      onClick={() => { setActiveProduct(p); setView('detail'); window.scrollTo(0,0); }} 
+                      className="group glass-panel p-8 rounded-[2.5rem] border border-black/5 dark:border-white/5 hover:border-nexlyn/40 transition-all cursor-pointer overflow-hidden flex flex-col h-full hover:translate-y-[-10px] duration-500 focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black"
+                      tabIndex={0}
+                      role="button"
+                      onKeyDown={(e) => e.key === 'Enter' && setActiveProduct(p)}
+                    >
                       <div className="aspect-square rounded-[2rem] bg-gradient-to-br from-nexlyn/20 via-black to-black overflow-hidden mb-10 border border-black/5 dark:border-white/5 relative">
-                        <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 mix-blend-screen opacity-90" />
+                        <img src={p.imageUrl} alt={p.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 mix-blend-screen opacity-90" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
                         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
                            <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[8px] font-black text-white uppercase tracking-widest">{p.code}</span>
@@ -647,7 +728,7 @@ const App: React.FC = () => {
                   ))}
                </div>
                <div className="mt-24 text-center">
-                  <button onClick={() => { setView('products'); window.scrollTo(0,0); }} className="group inline-flex items-center gap-6 px-12 py-6 glass-panel border border-nexlyn/20 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-slate-900 dark:text-white hover:bg-nexlyn hover:text-white hover:border-nexlyn transition-all shadow-2xl">
+                  <button onClick={() => { setView('products'); window.scrollTo(0,0); }} className="group inline-flex items-center gap-6 px-12 py-6 glass-panel border border-nexlyn/20 rounded-2xl text-[11px] font-black uppercase tracking-[0.4em] text-slate-900 dark:text-white hover:bg-nexlyn hover:text-white hover:border-nexlyn transition-all shadow-2xl focus:outline-none focus:ring-2 focus:ring-nexlyn">
                     Expand Complete Registry
                     <ICONS.ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                   </button>
@@ -680,9 +761,15 @@ const App: React.FC = () => {
              {filteredProducts.length > 0 ? (
                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                   {filteredProducts.map(p => (
-                    <div key={p.id} onClick={() => { setActiveProduct(p); setView('detail'); window.scrollTo(0,0); }} className="group glass-panel p-8 rounded-[2.5rem] border border-black/5 dark:border-white/5 hover:border-nexlyn/40 transition-all cursor-pointer hover:translate-y-[-5px] duration-500">
+                    <div 
+                      key={p.id} 
+                      onClick={() => { setActiveProduct(p); setView('detail'); window.scrollTo(0,0); }} 
+                      className="group glass-panel p-8 rounded-[2.5rem] border border-black/5 dark:border-white/5 hover:border-nexlyn/40 transition-all cursor-pointer hover:translate-y-[-5px] duration-500 focus:outline-none focus:ring-2 focus:ring-nexlyn"
+                      role="button"
+                      tabIndex={0}
+                    >
                       <div className="aspect-square bg-gradient-to-br from-nexlyn/10 to-transparent rounded-3xl overflow-hidden mb-8 relative border border-black/5 dark:border-white/5">
-                        <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 mix-blend-screen" />
+                        <img src={p.imageUrl} alt={p.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 mix-blend-screen" />
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
                         <div className="absolute top-4 left-4">
                            <div className="px-3 py-1 bg-black/40 backdrop-blur-md rounded-full text-[8px] font-black text-white/70 tracking-widest uppercase">{p.code}</div>
@@ -740,7 +827,7 @@ const App: React.FC = () => {
                     <p className="text-xl text-slate-500 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">Operating out of Dubai's Digital Hub, we leverage world-class logistics infrastructure to maintain the fastest hardware turnaround in the region.</p>
                     <div className="text-2xl text-slate-900 dark:text-white font-black italic uppercase tracking-tighter border-l-4 border-nexlyn pl-8 py-4 bg-nexlyn/5 rounded-r-2xl">{address}</div>
                   </div>
-                  <a href={mapUrl} target="_blank" className="inline-flex items-center gap-6 px-14 py-7 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase text-[11px] tracking-[0.3em] hover:bg-nexlyn hover:text-white transition-all shadow-2xl">
+                  <a href={mapUrl} target="_blank" className="inline-flex items-center gap-6 px-14 py-7 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl font-black uppercase text-[11px] tracking-[0.3em] hover:bg-nexlyn hover:text-white transition-all shadow-2xl focus:outline-none focus:ring-2 focus:ring-nexlyn">
                     <ICONS.Globe className="w-6 h-6" />
                     Coordinate Logistics Hub
                   </a>
@@ -792,8 +879,8 @@ const App: React.FC = () => {
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-6 pt-10">
-                       <button onClick={() => openWhatsApp('product', activeProduct)} className="flex-1 py-7 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.03] transition-transform active:scale-95">Request Distribution Quote</button>
-                       <button onClick={() => { setView('products'); window.scrollTo(0,0); }} className="px-14 py-7 glass-panel border border-black/10 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] hover:bg-black/5 dark:hover:bg-white/10 transition-all">Back to Grid</button>
+                       <button onClick={() => openWhatsApp('product', activeProduct)} className="flex-1 py-7 bg-nexlyn text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl shadow-nexlyn/40 hover:scale-[1.03] transition-transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-nexlyn focus:ring-offset-2 dark:focus:ring-offset-black">Request Distribution Quote</button>
+                       <button onClick={() => { setView('products'); window.scrollTo(0,0); }} className="px-14 py-7 glass-panel border border-black/10 dark:border-white/10 text-slate-900 dark:text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[11px] hover:bg-black/5 dark:hover:bg-white/10 transition-all focus:outline-none focus:ring-2 focus:ring-white">Back to Grid</button>
                     </div>
                     
                     <div className="flex items-center gap-3">
@@ -805,7 +892,20 @@ const App: React.FC = () => {
            </div>
         )}
 
-        {view === 'admin' && <AdminView />}
+        {view === 'admin' && (
+          <AdminView 
+            isAdmin={isAdmin}
+            setIsAdmin={setIsAdmin}
+            products={products}
+            setProducts={setProducts}
+            waNumber={waNumber}
+            setWaNumber={setWaNumber}
+            address={address}
+            setAddress={setAddress}
+            aboutContent={aboutContent}
+            setAboutContent={setAboutContent}
+          />
+        )}
       </main>
 
       {/* AI SIDE PANEL */}
@@ -825,7 +925,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             </div>
-            <button onClick={() => setChatOpen(false)} className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-nexlyn text-3xl font-light transition-colors">&times;</button>
+            <button onClick={() => setChatOpen(false)} aria-label="Close Chat" className="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-nexlyn text-3xl font-light transition-colors focus:outline-none focus:text-nexlyn">&times;</button>
           </div>
           <div className="flex-1 overflow-y-auto p-10 space-y-10 no-scrollbar">
             {messages.map((m, i) => (
@@ -855,7 +955,7 @@ const App: React.FC = () => {
                 placeholder="Query hardware metrics or network design..."
                 className="w-full glass-panel py-6 px-8 rounded-2xl border border-black/10 dark:border-white/10 focus:outline-none focus:border-nexlyn text-sm font-bold text-slate-900 dark:text-white shadow-inner"
               />
-              <button type="submit" disabled={isLoading || !input.trim()} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-nexlyn text-white rounded-xl flex items-center justify-center shadow-lg hover:scale-110 disabled:opacity-50 disabled:scale-100 transition-all">
+              <button type="submit" disabled={isLoading || !input.trim()} className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-nexlyn text-white rounded-xl flex items-center justify-center shadow-lg hover:scale-110 disabled:opacity-50 disabled:scale-100 transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-nexlyn">
                 <ICONS.ChevronRight className="w-5 h-5" />
               </button>
             </div>
@@ -864,7 +964,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="fixed bottom-12 right-12 z-[150] flex flex-col items-end gap-6">
-        <button onClick={() => setChatOpen(true)} className="w-20 h-20 glass-panel border border-black/10 dark:border-white/10 text-slate-900 dark:text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group overflow-hidden relative">
+        <button onClick={() => setChatOpen(true)} aria-label="Open AI Assistant" className="w-20 h-20 glass-panel border border-black/10 dark:border-white/10 text-slate-900 dark:text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group overflow-hidden relative focus:outline-none focus:ring-2 focus:ring-nexlyn">
           <div className="absolute inset-0 bg-nexlyn opacity-0 group-hover:opacity-10 transition-opacity" />
           <ICONS.Bolt className="w-10 h-10 relative z-10 text-nexlyn" />
         </button>
@@ -873,8 +973,9 @@ const App: React.FC = () => {
           <div className="absolute inset-0 bg-[#25D366] rounded-[2rem] animate-sonar pointer-events-none" />
           <button 
             onClick={() => openWhatsApp('general')} 
-            className="relative w-20 h-20 bg-[#25D366] text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-10"
+            className="relative w-20 h-20 bg-[#25D366] text-white rounded-[2rem] flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all z-10 focus:outline-none focus:ring-2 focus:ring-green-400"
             title="Chat with Us on WhatsApp"
+            aria-label="Contact via WhatsApp"
           >
             <ICONS.WhatsApp className="w-12 h-12 fill-white stroke-none" />
           </button>
@@ -884,7 +985,7 @@ const App: React.FC = () => {
       <footer className="py-32 border-t border-black/5 dark:border-white/10 bg-white/90 dark:bg-black/90 relative mt-20">
          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-20">
             <div className="space-y-8">
-               <Logo />
+               <Logo onClick={() => { setView('home'); setSearchQuery(''); }} />
                <p className="text-slate-500 text-[11px] leading-relaxed font-bold uppercase tracking-widest opacity-80">{aboutContent.substring(0, 150)}...</p>
                <div className="flex gap-6">
                   {[ICONS.Globe, ICONS.Shield, ICONS.Grid].map((Icon, i) => <Icon key={i} className="w-5 h-5 text-slate-400 hover:text-nexlyn cursor-pointer transition-colors" />)}
