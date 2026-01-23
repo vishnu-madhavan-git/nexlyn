@@ -101,7 +101,7 @@ const Header = React.memo(({ isScrolled, searchQuery, setSearchQuery, view, setV
               aria-label="Toggle Theme"
               className="p-3 rounded-2xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:border-nexlyn transition-all text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-2 focus:ring-nexlyn"
             >
-              {theme === 'dark' ? <ICONS.Globe className="w-4 h-4" /> : <ICONS.Grid className="w-4 h-4" />}
+              {theme === 'dark' ? <ICONS.Sun className="w-4 h-4" /> : <ICONS.Moon className="w-4 h-4" />}
             </button>
             <button onClick={() => setView('admin')} aria-label="Admin Access" className="p-2 opacity-20 hover:opacity-100 transition-opacity hidden sm:block text-slate-900 dark:text-white focus:opacity-100 focus:outline-none"><ICONS.Shield className="w-5 h-5" /></button>
             
@@ -921,6 +921,9 @@ const App: React.FC = () => {
                <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-900 dark:text-white">Notice</h4>
                <p className="text-[10px] text-slate-500 dark:text-slate-600 leading-relaxed font-bold uppercase italic tracking-tight opacity-70">
                  NEXLYN Distributions LLC is an independent authorized MikroTik® Master Distributor. All hardware systems are genuine and factory-sealed. Trading governed by DIFC and international export law.
+               </p>
+               <p className="text-[9px] text-slate-500 dark:text-slate-600 leading-relaxed font-medium tracking-tight opacity-60">
+                 MikroTik® is a registered trademark of Mikrotikls SIA. NEXLYN is not affiliated with or endorsed by Mikrotikls SIA beyond our authorized distributor status. All trademarks and product names are the property of their respective owners.
                </p>
                <div className="pt-4">
                   <div className="text-[11px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Authorized Status:</div>
