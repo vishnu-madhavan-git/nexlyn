@@ -228,10 +228,12 @@ const AdminView = ({
   products, setProducts, 
   waNumber, setWaNumber, 
   address, setAddress, 
-  aboutContent, setAboutContent 
+  aboutContent, setAboutContent,
+  banners, setBanners
 }: any) => {
   const [passInput, setPassInput] = useState('');
   const [editProduct, setEditProduct] = useState<Partial<Product> | null>(null);
+  const [editBanner, setEditBanner] = useState<Partial<HeroSlide> | null>(null);
 
   const stats = useMemo(() => ({
     total: products.length,
@@ -339,6 +341,34 @@ const AdminView = ({
               ))}
             </div>
           </div>
+
+          <div className="space-y-10">
+            <div className="flex justify-between items-center">
+              <h3 className="text-2xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Home Page <span className="text-nexlyn">Banners</span></h3>
+              <button 
+                onClick={() => setEditBanner({ title: '', subtitle: '', image: '', categoryId: '' })}
+                className="px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-black rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-nexlyn hover:text-white transition-all shadow-xl"
+              >Create New Banner</button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {banners.map((banner: HeroSlide, idx: number) => (
+                <div key={idx} className="glass-panel p-6 rounded-3xl border border-black/5 dark:border-white/5 group hover:border-nexlyn/20 transition-all space-y-4">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="font-black text-slate-900 dark:text-white uppercase italic text-sm">{banner.title.substring(0, 40)}...</div>
+                      <div className="text-[9px] font-black text-nexlyn uppercase tracking-widest mt-1">{banner.categoryId}</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => setEditBanner({ ...banner, index: idx })} className="p-3 text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/5 rounded-xl text-xs">Edit</button>
+                      <button onClick={() => { if(confirm('Delete Banner?')) setBanners(banners.filter((_: any, i: number) => i !== idx)) }} className="p-3 text-red-500/30 hover:text-red-500 transition-colors bg-red-500/5 rounded-xl text-xs">Del</button>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-500 leading-relaxed">{banner.subtitle.substring(0, 80)}...</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
       
@@ -423,6 +453,64 @@ const AdminView = ({
           </div>
         </div>
       )}
+
+      {editBanner && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300">
+          <div className="w-full max-w-3xl glass-panel p-12 rounded-[3rem] space-y-10 max-h-[90vh] overflow-y-auto no-scrollbar border border-nexlyn/20 shadow-2xl">
+            <div className="flex justify-between items-center border-b border-black/5 dark:border-white/5 pb-6">
+                <h3 className="text-3xl font-black italic uppercase text-slate-900 dark:text-white tracking-tighter">Banner <span className="text-nexlyn">Editor</span></h3>
+                <button onClick={() => setEditBanner(null)} className="text-4xl leading-none text-slate-500 hover:text-white">&times;</button>
+            </div>
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Banner Title</label>
+                <input value={editBanner.title} onChange={e => setEditBanner({...editBanner, title: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors uppercase" />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Subtitle</label>
+                <textarea value={editBanner.subtitle} onChange={e => setEditBanner({...editBanner, subtitle: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-6 rounded-2xl text-sm h-24 resize-none leading-relaxed focus:border-nexlyn focus:outline-none transition-colors" />
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Category</label>
+                <select value={editBanner.categoryId} onChange={e => setEditBanner({...editBanner, categoryId: e.target.value})} className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors">
+                  <option value="">Select Category</option>
+                  <option value="Routing">Routing</option>
+                  <option value="Switching">Switching</option>
+                  <option value="Wireless">Wireless</option>
+                  <option value="5G/LTE">5G/LTE</option>
+                  <option value="Accessories">Accessories</option>
+                </select>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Background Image URL</label>
+                <input 
+                  type="url"
+                  value={editBanner.image || ''} 
+                  onChange={e => setEditBanner({...editBanner, image: e.target.value})} 
+                  placeholder="https://example.com/banner-image.jpg"
+                  className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-5 rounded-2xl text-sm font-bold focus:border-nexlyn focus:outline-none transition-colors" 
+                />
+                <p className="text-[9px] text-slate-500 uppercase tracking-wider">Enter a direct URL to the banner background image</p>
+              </div>
+            </div>
+            <div className="flex gap-6 pt-6">
+              <button 
+                onClick={() => {
+                  const idx = (editBanner as any).index;
+                  if (idx !== undefined) {
+                    setBanners(banners.map((b: HeroSlide, i: number) => i === idx ? { title: editBanner.title, subtitle: editBanner.subtitle, image: editBanner.image, categoryId: editBanner.categoryId } as HeroSlide : b));
+                  } else {
+                    setBanners([...banners, { title: editBanner.title, subtitle: editBanner.subtitle, image: editBanner.image, categoryId: editBanner.categoryId } as HeroSlide]);
+                  }
+                  setEditBanner(null);
+                }}
+                className="flex-1 py-5 bg-nexlyn text-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-2xl shadow-nexlyn/20 hover:scale-[1.02] transition-transform"
+              >Save Banner</button>
+              <button onClick={() => setEditBanner(null)} className="flex-1 py-5 bg-black/10 dark:bg-white/10 text-slate-900 dark:text-white rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-black/20 dark:hover:bg-white/20 transition-all">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -445,6 +533,10 @@ const App: React.FC = () => {
   const [aboutContent, setAboutContent] = useState(() => localStorage.getItem('nexlyn_about') || "Nexlyn is a premier MikroTik® Master Distributor based in Dubai, serving the Middle East and Africa. We specialize in providing carrier-grade routing, high-density switching, and professional wireless deployments for internet service providers and large-scale enterprises.");
   const [address, setAddress] = useState(() => localStorage.getItem('nexlyn_address') || "Silicon Oasis, Dubai Digital Park, UAE");
   const [mapUrl, setMapUrl] = useState(() => localStorage.getItem('nexlyn_map_url') || "https://maps.app.goo.gl/971502474482");
+  const [banners, setBanners] = useState<HeroSlide[]>(() => {
+    const saved = localStorage.getItem('nexlyn_banners');
+    return saved ? JSON.parse(saved) : HERO_SLIDES;
+  });
 
   // --- UI STATE ---
   const [view, setView] = useState<ViewType>('home');
@@ -476,7 +568,8 @@ const App: React.FC = () => {
     localStorage.setItem('nexlyn_about', aboutContent);
     localStorage.setItem('nexlyn_address', address);
     localStorage.setItem('nexlyn_map_url', mapUrl);
-  }, [products, waNumber, aboutContent, address, mapUrl]);
+    localStorage.setItem('nexlyn_banners', JSON.stringify(banners));
+  }, [products, waNumber, aboutContent, address, mapUrl, banners]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 30);
@@ -490,7 +583,7 @@ const App: React.FC = () => {
       const interval = setInterval(() => {
         setIsExiting(true);
         setTimeout(() => {
-          setSlideIndex((prev) => (prev + 1) % HERO_SLIDES.length);
+          setSlideIndex((prev) => (prev + 1) % banners.length);
           setIsExiting(false);
         }, 800);
       }, 8000);
@@ -550,11 +643,11 @@ const App: React.FC = () => {
             <section 
               className="relative h-[100vh] flex items-center justify-center overflow-hidden cursor-pointer"
               onClick={() => {
-                const slide = HERO_SLIDES[slideIndex];
+                const slide = banners[slideIndex];
                 if (slide.categoryId) { setSelectedCat(slide.categoryId); setView('products'); window.scrollTo(0,0); }
               }}
             >
-              {HERO_SLIDES.map((slide, idx) => (
+              {banners.map((slide, idx) => (
                 <div 
                   key={idx}
                   className={`absolute inset-0 transition-all duration-[1200ms] ease-in-out ${idx === slideIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-110'}`}
@@ -577,12 +670,12 @@ const App: React.FC = () => {
                 <div className="inline-flex items-center gap-4 px-8 py-3 glass-panel rounded-full border border-nexlyn/40 stagger-1 shadow-2xl shadow-nexlyn/10">
                   <div className="w-2.5 h-2.5 rounded-full bg-nexlyn animate-pulse shadow-[0_0_15px_rgba(230,0,38,0.8)]" />
                   <span className="text-[11px] font-black uppercase tracking-[0.5em] text-slate-900 dark:text-white">
-                    {HERO_SLIDES[slideIndex].categoryId} <span className="text-nexlyn opacity-50">/</span> <span className="opacity-70 font-bold">Solutions</span>
+                    {banners[slideIndex].categoryId} <span className="text-nexlyn opacity-50">/</span> <span className="opacity-70 font-bold">Solutions</span>
                   </span>
                 </div>
                 
                 <h1 className="text-6xl md:text-[9rem] font-black tracking-tighter leading-[0.8] uppercase italic text-slate-900 dark:text-white stagger-2 drop-shadow-2xl">
-                  {HERO_SLIDES[slideIndex].title.split(' ').map((word, i) => (
+                  {banners[slideIndex].title.split(' ').map((word, i) => (
                     <span key={i} className={i % 2 !== 0 ? 'text-nexlyn' : ''}>
                       {word}{' '}
                     </span>
@@ -590,7 +683,7 @@ const App: React.FC = () => {
                 </h1>
                 
                 <p className="max-w-3xl mx-auto text-slate-700 dark:text-slate-200 text-lg md:text-2xl font-bold leading-relaxed drop-shadow-lg stagger-3 px-4">
-                  {HERO_SLIDES[slideIndex].subtitle}
+                  {banners[slideIndex].subtitle}
                 </p>
                 
                 <div className="flex flex-wrap justify-center gap-6 pt-10 stagger-4">
@@ -871,6 +964,8 @@ const App: React.FC = () => {
             setAddress={setAddress}
             aboutContent={aboutContent}
             setAboutContent={setAboutContent}
+            banners={banners}
+            setBanners={setBanners}
           />
         )}
       </main>
