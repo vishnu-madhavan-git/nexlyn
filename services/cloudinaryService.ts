@@ -1,5 +1,4 @@
 // services/cloudinaryService.ts
-import { Cloudinary } from '@cloudinary/url-gen';
 
 // These will be set via environment variables
 export const CLOUDINARY_CONFIG = {
@@ -11,12 +10,6 @@ export const CLOUDINARY_CONFIG = {
 if (CLOUDINARY_CONFIG.cloudName === 'demo' || CLOUDINARY_CONFIG.uploadPreset === 'unsigned_upload') {
   console.warn('⚠️ Cloudinary is using default configuration. Please set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your .env.local file.');
 }
-
-export const cloudinary = new Cloudinary({
-  cloud: {
-    cloudName: CLOUDINARY_CONFIG.cloudName
-  }
-});
 
 export const uploadImage = async (file: File): Promise<string> => {
   // Check if Cloudinary is properly configured

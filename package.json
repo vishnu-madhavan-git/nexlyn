@@ -10,9 +10,7 @@
   },
   "dependencies": {
     "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "@cloudinary/react": "^1.13.0",
-    "@cloudinary/url-gen": "^1.19.0"
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
