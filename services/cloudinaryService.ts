@@ -1,10 +1,10 @@
 // services/cloudinaryService.ts
 import { Cloudinary } from '@cloudinary/url-gen';
 
-// These will be set via environment variables
+// These will be set via environment variables - using import.meta.env for Vite
 export const CLOUDINARY_CONFIG = {
-  cloudName: process.env.VITE_CLOUDINARY_CLOUD_NAME || 'demo',
-  uploadPreset: process.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'unsigned_upload'
+  cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'demo',
+  uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'unsigned_upload'
 };
 
 // Warn if using default values

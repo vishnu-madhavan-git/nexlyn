@@ -24,7 +24,7 @@ If a user asks about pricing, direct them to use the "B2B Quote" or WhatsApp but
 
 export class GeminiService {
   private getAI() {
-    return new GoogleGenAI({ apiKey: process.env.API_KEY });
+    return new GoogleGenAI({ apiKey: import.meta.env.VITE_API_KEY || import.meta.env.API_KEY || '' });
   }
 
   async *streamTech(prompt: string) {

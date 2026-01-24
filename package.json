@@ -3,18 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.2.3",
-    "@google/genai": "^1.37.0",
-    "react-dom": "^19.2.3",
-    "recharts": "^3.6.0",
     "@cloudinary/react": "^1.13.0",
-    "@cloudinary/url-gen": "^1.19.0"
+    "@cloudinary/url-gen": "^1.19.0",
+    "@google/genai": "^1.37.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "recharts": "^3.6.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
