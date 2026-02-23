@@ -1,11 +1,15 @@
 # AI Portfolio Naming Policy
 
 ## Scope
-This policy applies to AI repositories in these lanes:
-- client: `Nexlyn-Distribution-LLC`
-- personal: `BA-GOO`
-- forks: `API-9Ruby`
-- admin-sensitive metadata: `Nexlyn-Admin`
+This policy applies to AI repositories under one owner:
+- owner: `vishnu-madhavan-git`
+- org usage: disabled for this portfolio layout
+
+Lane labels are still used for organization:
+- `client`
+- `personal`
+- `fork`
+- `admin`
 
 ## Allowed repo name format
 - `word`
@@ -44,7 +48,7 @@ Pattern:
 
 ## Rename process
 1. Confirm lane and in-scope (AI-only in this rollout).
-2. Check destination name availability in the target org.
+2. Check destination name availability under `vishnu-madhavan-git`.
 3. Rename/transfer using canonical one-word first naming.
 4. Update `docs/naming/registry.yaml` in this repository.
 5. Update local `origin` remotes.
